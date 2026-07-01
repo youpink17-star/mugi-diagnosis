@@ -63,7 +63,7 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
         {active && (
           <span className="inline-flex items-center gap-1 rounded-xl bg-navy px-4 py-2 text-[13px] font-bold text-white transition group-hover:bg-pink">
-            무료로 확인
+            진단하기
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

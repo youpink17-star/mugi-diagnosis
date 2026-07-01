@@ -5,103 +5,257 @@ import type { Question } from "./types";
 //  - 각 옵션 score 의 키는 results.ts / scoring.ts 의 차원 키와 일치해야 함
 // ============================================================
 
+// 무기 유형 테스트 8유형 판별 9문항 (채널 무관 — 온/오프/크리에이터 공유)
+const WEAPON_Q9: Question[] = [
+  {
+    id: "q1",
+    type: "single",
+    q: "새 아이디어가 떠오르면 나는?",
+    required: true,
+    options: [
+      { value: "a", label: "신나서 일단 시작해본다", score: { inventor: 1, executor: 1, creator: 1 } },
+      { value: "b", label: "‘이거 될까?’ 먼저 따져본다", score: { strategist: 1, seller: 1, interpreter: 1 } },
+    ],
+  },
+  {
+    id: "q2",
+    type: "single",
+    q: "모임·단톡방에 들어가면 나는?",
+    required: true,
+    options: [
+      { value: "a", label: "어느새 분위기 띄우고 사람들 이어줌", score: { connector: 1, seller: 1, creator: 1 } },
+      { value: "b", label: "조용히 있다 필요할 때만 말함", score: { craftsman: 1, strategist: 1, interpreter: 1 } },
+    ],
+  },
+  {
+    id: "q3",
+    type: "single",
+    q: "하던 게 익숙해지면 나는?",
+    required: true,
+    options: [
+      { value: "a", label: "새로운 게 하고 싶어진다", score: { inventor: 1, creator: 1, executor: 1 } },
+      { value: "b", label: "더 깊이 파서 잘하고 싶어진다", score: { craftsman: 1, interpreter: 1, strategist: 1 } },
+    ],
+  },
+  {
+    id: "q4",
+    type: "single",
+    q: "뭔가 배울 때 나는?",
+    required: true,
+    options: [
+      { value: "a", label: "일단 해보면서 익힌다", score: { executor: 1, creator: 1, seller: 1 } },
+      { value: "b", label: "원리부터 이해하고 한다", score: { strategist: 1, interpreter: 1, craftsman: 1 } },
+    ],
+  },
+  {
+    id: "q5",
+    type: "single",
+    q: "일할 때 더 끌리는 쪽은?",
+    required: true,
+    options: [
+      { value: "a", label: "만들고 다듬기", score: { craftsman: 1, inventor: 1, creator: 1 } },
+      { value: "b", label: "알리고 팔기", score: { seller: 1, connector: 1, strategist: 1 } },
+    ],
+  },
+  {
+    id: "q6",
+    type: "single",
+    q: "손님이 고민을 털어놓으면 나는?",
+    required: true,
+    options: [
+      { value: "a", label: "같이 해결책을 찾아준다", score: { strategist: 1, interpreter: 1, seller: 1 } },
+      { value: "b", label: "우선 들어주고 공감한다", score: { connector: 1, craftsman: 1 } },
+    ],
+  },
+  {
+    id: "q7",
+    type: "single",
+    q: "이런 칭찬이 더 기분 좋다",
+    required: true,
+    options: [
+      { value: "a", label: "생각이 남다르다는 말", score: { inventor: 1, creator: 1, strategist: 1 } },
+      { value: "b", label: "꾸준하고 믿음직하다는 말", score: { craftsman: 1, interpreter: 1 } },
+    ],
+  },
+  {
+    id: "q8",
+    type: "single",
+    q: "일이 잘 풀릴 때는?",
+    required: true,
+    options: [
+      { value: "a", label: "혼자 집중할 때", score: { craftsman: 1, inventor: 1, strategist: 1 } },
+      { value: "b", label: "사람들이랑 얘기하다가", score: { connector: 1, seller: 1, creator: 1 } },
+    ],
+  },
+  {
+    id: "q9",
+    type: "single",
+    q: "더 나 같은 쪽은?",
+    required: true,
+    options: [
+      { value: "a", label: "넓게 여러 개 벌이기", score: { inventor: 1, creator: 1, seller: 1, executor: 1 } },
+      { value: "b", label: "깊게 하나 파기", score: { craftsman: 1, interpreter: 1, strategist: 1 } },
+    ],
+  },
+];
+
+// 무기 유형 테스트(MBTI식) — 5점 리커트 문항 헬퍼.
+// 각 문항은 한 축의 한 극(pole)을 가리키고, 동의할수록 그 극에 점수가 쌓인다.
+type Pole = "E" | "S" | "R" | "I" | "N" | "P";
+const OPP_POLE: Record<Pole, Pole> = { E: "S", S: "E", R: "I", I: "R", N: "P", P: "N" };
+function likert(id: string, q: string, pole: Pole): Question {
+  const opp = OPP_POLE[pole];
+  return {
+    id,
+    type: "single",
+    q,
+    required: true,
+    options: [
+      { value: "vd", label: "전혀 아니다", score: { [opp]: 2 } },
+      { value: "d", label: "아니다", score: { [opp]: 1 } },
+      { value: "n", label: "보통이다" },
+      { value: "a", label: "그렇다", score: { [pole]: 1 } },
+      { value: "va", label: "매우 그렇다", score: { [pole]: 2 } },
+    ],
+  };
+}
+
+// 3축 × 8문항(극당 4문항) = 24문항. 축 균형을 맞춰 모든 문항이 결과에 쓰인다.
+const WEAPON_MBTI_Q: Question[] = [
+  // ── E/S : 도전·확장 vs 안정·완성 ──
+  likert("e1", "지금의 안정보다, 지금의 투자와 도전이 더 낫다.", "E"),
+  likert("e2", "시장이 커질 것 같으면, 불편을 감수하고 먼저 뛰어든다.", "E"),
+  likert("e3", "대출을 더 받더라도 성장 가능성이 높으면 투자할 것이다.", "E"),
+  likert("e4", "지금 버는 것에 만족하기보다, 사업을 더 키우고 싶다.", "E"),
+  likert("s1", "일과 삶에 여유를 두고 천천히 운영하는 편이다.", "S"),
+  likert("s2", "성과보다 만족스러운 과정 자체를 중요하게 여긴다.", "S"),
+  likert("s3", "새로운 방식보다 예전부터 해오던 익숙한 방식이 편하다.", "S"),
+  likert("s4", "지금 하는 일을 충분히 즐기며 만족하고 있다.", "S"),
+  // ── R/I : 함께·관계 vs 혼자·독립 ──
+  likert("r1", "혼자 일하기보다 여러 사람과 함께 일하는 걸 좋아한다.", "R"),
+  likert("r2", "협업이나 커뮤니티가 있으면 적극적으로 활용한다.", "R"),
+  likert("r3", "사람은 늘 활발하고 북적이는 곳에서 만나는 게 좋다.", "R"),
+  likert("r4", "일이 잘 풀릴 때는 대체로 사람들과 얘기하다가 그렇다.", "R"),
+  likert("i1", "사무실·도심보다 조용하고 한적한 곳에서 일하는 게 좋다.", "I"),
+  likert("i2", "중요한 결정은 남의 의견보다 내 판단을 더 믿는다.", "I"),
+  likert("i3", "함께보다 혼자 몰입할 때 일이 가장 잘 된다.", "I"),
+  likert("i4", "커뮤니티에 기대기보다 혼자 알아서 해결하는 편이다.", "I"),
+  // ── N/P : 감·유연 vs 계획·체계 ──
+  likert("n1", "계획을 세우기보다 일단 해보면서 감으로 익힌다.", "N"),
+  likert("n2", "상황이 바뀌면 계획을 버리고 빠르게 적응한다.", "N"),
+  likert("n3", "새롭고 독특한 걸 보면 나도 시도해보고 싶어진다.", "N"),
+  likert("n4", "결정은 데이터보다 직관·촉으로 내릴 때가 많다.", "N"),
+  likert("p1", "목표를 세우면 계획대로 반드시 실현하려 한다.", "P"),
+  likert("p2", "약속한 일정과 원칙은 반드시 지킨다.", "P"),
+  likert("p3", "즉흥적으로 움직이기보다 순서와 구조를 먼저 잡는다.", "P"),
+  likert("p4", "검증된 방식·자료를 확인하고 나서 움직인다.", "P"),
+];
+
 export const FREE_TESTS: Record<string, Question[]> = {
-  // ---------------- 차별화 진단 ----------------
+  // 무기 유형 테스트 (MBTI식 · 입구 1개)
+  weapon: WEAPON_MBTI_Q,
+
+  // ---------------- #2 왜 굳이 나야? (차별화 4유형) ----------------
   differentiation: [
     {
-      id: "d1",
+      id: "state",
       type: "single",
-      q: "비슷한 곳이 많을 때, 나는 보통",
+      q: "솔직히 지금 나는?",
       required: true,
       options: [
-        { value: "niche", label: "더 좁은 한 분야로 파고든다", score: { niche: 2 } },
-        { value: "expertise", label: "결과로 압도해 증명한다", score: { expertise: 2 } },
-        { value: "story", label: "나만의 이야기로 다르게 보인다", score: { story: 2 } },
-        { value: "experience", label: "응대·디테일로 기억되게 한다", score: { experience: 2 } },
+        { value: "crowded", label: "비슷한 데가 너무 많아 묻히는 느낌" },
+        { value: "blank", label: "내가 뭐가 다른지 나도 잘 모르겠어" },
+        { value: "untold", label: "다른 점은 있는데 손님한테 못 보여줘" },
       ],
     },
     {
-      id: "d2",
+      id: "q1",
       type: "single",
-      q: "고객이 나를 고르는 진짜 이유는",
+      q: "손님이 나를 고른다면, 더 가까운 이유는?",
       required: true,
       options: [
-        { value: "niche", label: "‘이 분야는 여기’라는 전문성", score: { niche: 2 } },
-        { value: "expertise", label: "‘맡기면 된다’는 확실한 결과", score: { expertise: 2 } },
-        { value: "story", label: "‘이 사람이 좋아서’", score: { story: 2 } },
-        { value: "experience", label: "‘여기 오면 기분이 좋아서’", score: { experience: 2 } },
+        { value: "a", label: "‘이건 여기가 제일’이라서", score: { niche: 2 } },
+        { value: "b", label: "그냥 ‘이 사람’이 좋아서", score: { story: 2 } },
       ],
     },
     {
-      id: "d3",
+      id: "q2",
       type: "single",
-      q: "내가 가장 자신 있는 한마디는",
+      q: "장사가 잘된 날, 비결을 꼽자면?",
       required: true,
       options: [
-        { value: "niche", label: "특정 고객·분야는 내가 1등", score: { niche: 2 } },
-        { value: "expertise", label: "실력·결과만큼은 자신 있다", score: { expertise: 2 } },
-        { value: "story", label: "내 이야기·캐릭터가 매력 있다", score: { story: 2 } },
-        { value: "experience", label: "한 번 온 사람은 단골이 된다", score: { experience: 2 } },
+        { value: "a", label: "결과가 확실해서 소개가 이어짐", score: { expertise: 2 } },
+        { value: "b", label: "단골이 또 오고 데려와서", score: { experience: 2 } },
       ],
     },
     {
-      id: "d4",
+      id: "q3",
       type: "single",
-      q: "시간을 가장 쓰고 싶은 곳은",
+      q: "‘이건 좀 자신 있다’ 싶은 건?",
       required: true,
       options: [
-        { value: "niche", label: "한 분야를 더 깊게 파기", score: { niche: 2 } },
-        { value: "expertise", label: "실력·완성도 끌어올리기", score: { expertise: 2 } },
-        { value: "story", label: "내 색깔·콘텐츠 만들기", score: { story: 2 } },
-        { value: "experience", label: "고객 한 명 한 명 챙기기", score: { experience: 2 } },
+        { value: "a", label: "한 분야는 내가 제일 잘 안다", score: { niche: 2 } },
+        { value: "b", label: "한 번 온 사람은 단골로 만든다", score: { experience: 2 } },
       ],
     },
     {
-      id: "d5",
+      id: "q4",
       type: "single",
-      q: "남들에게 자주 듣는 칭찬은",
+      q: "내 가게를 한마디로 소개한다면?",
       required: true,
       options: [
-        { value: "niche", label: "“이거 완전 전문가네”", score: { niche: 2 } },
-        { value: "expertise", label: "“결과가 확실하다”", score: { expertise: 2 } },
-        { value: "story", label: "“사람이 매력 있다”", score: { story: 2 } },
-        { value: "experience", label: "“세심하고 친절하다”", score: { experience: 2 } },
+        { value: "a", label: "‘맡기면 되는’ 확실한 실력", score: { expertise: 2 } },
+        { value: "b", label: "‘나라서’ 가능한 색깔·이야기", score: { story: 2 } },
       ],
     },
     {
-      id: "d6",
+      id: "q5",
       type: "single",
-      q: "내 약점에 가장 가까운 건",
+      q: "둘 중 더 끌리는 칭찬은?",
       required: true,
       options: [
-        { value: "niche", label: "시장이 작아질까 불안하다", score: { niche: 2 } },
-        { value: "expertise", label: "알리는 걸 잘 안 한다", score: { expertise: 2 } },
-        { value: "story", label: "그래서 뭘 파는지 흐릿하다", score: { story: 2 } },
-        { value: "experience", label: "다 퍼주다 지친다", score: { experience: 2 } },
+        { value: "a", label: "이 분야 전문가네", score: { niche: 2 } },
+        { value: "b", label: "결과가 진짜 확실하네", score: { expertise: 2 } },
       ],
     },
     {
-      id: "d7",
+      id: "q6",
       type: "single",
-      q: "광고 없이도 고객이 온다면, 그 이유는",
+      q: "시간을 더 쓰고 싶은 쪽은?",
       required: true,
       options: [
-        { value: "niche", label: "‘그 분야 하면 거기’라는 입소문", score: { niche: 2 } },
-        { value: "expertise", label: "결과 보고 소개가 이어져서", score: { expertise: 2 } },
-        { value: "story", label: "팬·구독자가 생겨서", score: { story: 2 } },
-        { value: "experience", label: "단골이 다시 와서", score: { experience: 2 } },
+        { value: "a", label: "내 색깔·이야기 만들기", score: { story: 2 } },
+        { value: "b", label: "손님 한 명 한 명 챙기기", score: { experience: 2 } },
       ],
     },
     {
-      id: "d8",
+      id: "q7",
       type: "single",
-      q: "앞으로 더 키우고 싶은 차별화 무기는",
+      q: "비슷한 가게가 많아지면, 나는?",
       required: true,
       options: [
-        { value: "niche", label: "좁히기·포지셔닝", score: { niche: 2 } },
-        { value: "expertise", label: "실력·증거", score: { expertise: 2 } },
-        { value: "story", label: "스토리·브랜드", score: { story: 2 } },
-        { value: "experience", label: "관계·재구매", score: { experience: 2 } },
+        { value: "a", label: "더 좁은 한 분야로 파고든다", score: { niche: 2 } },
+        { value: "b", label: "나만의 이야기로 다르게 보인다", score: { story: 2 } },
+      ],
+    },
+    {
+      id: "q8",
+      type: "single",
+      q: "광고 없이 손님이 온다면, 그 이유는?",
+      required: true,
+      options: [
+        { value: "a", label: "결과 보고 소개가 이어져서", score: { expertise: 2 } },
+        { value: "b", label: "단골이 다시 찾아와서", score: { experience: 2 } },
+      ],
+    },
+    {
+      id: "q9",
+      type: "single",
+      q: "내 약점에 더 가까운 건?",
+      required: true,
+      options: [
+        { value: "a", label: "‘이래도 되나’ 싶어 자꾸 넓힌다", score: { niche: 2 } },
+        { value: "b", label: "잘 만드는데 알리는 걸 미룬다", score: { expertise: 2 } },
       ],
     },
   ],
@@ -128,7 +282,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       options: [
         { value: "clear", label: "아주 또렷하게 설명 가능", score: { target: 4 } },
         { value: "rough", label: "대략은 안다", score: { target: 2 } },
-        { value: "no", label: "‘다양한 사람’이라 콕 집기 어렵다", score: { target: 0 } },
+        { value: "no", label: "다양한 사람이라 콕 집기 어렵다", score: { target: 0 } },
       ],
     },
     {
@@ -206,7 +360,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       options: [
         { value: "top", label: "업계에서 인정받고 정상에 선 나", score: { model: 2, t: 1, j: 1 } },
         { value: "free", label: "누구 눈치도 안 보고 내 방식대로 사는 나", score: { action: 2, p: 1 } },
-        { value: "expert", label: "내 전문성으로 ‘이 분야 최고’가 된 나", score: { strength: 2, i: 1 } },
+        { value: "expert", label: "내 전문성으로 이 분야 최고가 된 나", score: { strength: 2, i: 1 } },
         { value: "impact", label: "내가 만든 게 누군가의 삶을 바꾼 것", score: { market: 2, f: 1, n: 1 } },
       ],
     },
@@ -216,10 +370,10 @@ export const FREE_TESTS: Record<string, Question[]> = {
       q: "새 아이디어가 떠올랐을 때, 머릿속에서 먼저 작동하는 건?",
       required: true,
       options: [
-        { value: "real", label: "‘이게 현실적으로 될까?’ 실행 가능성부터", score: { model: 1, s: 1 } },
-        { value: "big", label: "‘이게 이렇게 커질 수도?’ 큰 그림부터", score: { market: 1, n: 1 } },
-        { value: "exp", label: "‘내가 해봐서 아는데’ 내 경험에서 출발", score: { strength: 1, s: 1 } },
-        { value: "go", label: "‘일단 해보자’ 생각보다 손이 먼저", score: { action: 1, n: 1 } },
+        { value: "real", label: "이게 현실적으로 될까? 실행 가능성부터", score: { model: 1, s: 1 } },
+        { value: "big", label: "이게 이렇게 커질 수도? 큰 그림부터", score: { market: 1, n: 1 } },
+        { value: "exp", label: "내가 해봐서 아는데 내 경험에서 출발", score: { strength: 1, s: 1 } },
+        { value: "go", label: "일단 해보자 생각보다 손이 먼저", score: { action: 1, n: 1 } },
       ],
     },
     {
@@ -228,10 +382,10 @@ export const FREE_TESTS: Record<string, Question[]> = {
       q: "사람들이 당신에게 도움을 청할 때, 주로 뭘 부탁하나요?",
       required: true,
       options: [
-        { value: "analyze", label: "“이것 좀 정리·분석해줘”", score: { strength: 2, t: 1 } },
-        { value: "connect", label: "“누구 좀 소개·연결해줘”", score: { market: 2, e: 1, f: 1 } },
-        { value: "money", label: "“이걸로 어떻게 돈 벌지 같이 궁리해줘”", score: { model: 2, t: 1 } },
-        { value: "dothis", label: "“그냥 같이 한번 해보자”", score: { action: 2, e: 1 } },
+        { value: "analyze", label: "이것 좀 정리·분석해줘", score: { strength: 2, t: 1 } },
+        { value: "connect", label: "누구 좀 소개·연결해줘", score: { market: 2, e: 1, f: 1 } },
+        { value: "money", label: "이걸로 어떻게 돈 벌지 같이 궁리해줘", score: { model: 2, t: 1 } },
+        { value: "dothis", label: "그냥 같이 한번 해보자", score: { action: 2, e: 1 } },
       ],
     },
     {
@@ -276,7 +430,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       q: "당신의 상품을 팔아야 한다면, 더 자신 있는 방식은?",
       required: true,
       options: [
-        { value: "logic", label: "데이터·논리로 ‘이게 이득’임을 증명", score: { strength: 1, t: 1 } },
+        { value: "logic", label: "데이터·논리로 이게 이득임을 증명", score: { strength: 1, t: 1 } },
         { value: "story", label: "스토리·공감으로 마음을 움직임", score: { market: 1, f: 1 } },
         { value: "offer", label: "압도적인 제안·가격으로 밀어붙임", score: { model: 1, t: 1 } },
         { value: "show", label: "직접 보여주고 체험시켜 납득", score: { action: 1, s: 1 } },
@@ -312,10 +466,10 @@ export const FREE_TESTS: Record<string, Question[]> = {
       q: "지금까지 들은 칭찬 중 가장 ‘내 얘기’ 같은 건?",
       required: true,
       options: [
-        { value: "pro", label: "“넌 진짜 그 분야 전문가야”", score: { strength: 2, i: 1 } },
-        { value: "people", label: "“넌 사람을 잘 모으고 다뤄”", score: { market: 2, e: 1 } },
-        { value: "biz", label: "“넌 돈 냄새를 잘 맡아”", score: { model: 2, t: 1 } },
-        { value: "action", label: "“넌 진짜 추진력이 대단해”", score: { action: 2, j: 1 } },
+        { value: "pro", label: "넌 진짜 그 분야 전문가야", score: { strength: 2, i: 1 } },
+        { value: "people", label: "넌 사람을 잘 모으고 다뤄", score: { market: 2, e: 1 } },
+        { value: "biz", label: "넌 돈 냄새를 잘 맡아", score: { model: 2, t: 1 } },
+        { value: "action", label: "넌 진짜 추진력이 대단해", score: { action: 2, j: 1 } },
       ],
     },
     {
@@ -326,7 +480,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       options: [
         { value: "research", label: "자료를 더 찾아 깊이 파고든다", score: { strength: 1, s: 1, t: 1 } },
         { value: "ask", label: "사람들에게 물어보고 도움을 구한다", score: { market: 1, e: 1, f: 1 } },
-        { value: "reframe", label: "‘이게 돈이 되나’ 구조부터 다시 본다", score: { model: 1, t: 1 } },
+        { value: "reframe", label: "이게 돈이 되나 구조부터 다시 본다", score: { model: 1, t: 1 } },
         { value: "justdo", label: "고민 접고 일단 다른 방법을 시도", score: { action: 1, n: 1, p: 1 } },
       ],
     },
@@ -336,9 +490,9 @@ export const FREE_TESTS: Record<string, Question[]> = {
       q: "사업을 한다면 더 끌리는 그림은?",
       required: true,
       options: [
-        { value: "master", label: "작아도 ‘이 분야 최고’ 소리 듣는 1인 브랜드", score: { strength: 1, i: 1, j: 1 } },
+        { value: "master", label: "작아도 이 분야 최고 소리 듣는 1인 브랜드", score: { strength: 1, i: 1, j: 1 } },
         { value: "community", label: "사람들이 모이는 커뮤니티·플랫폼", score: { market: 1, e: 1, n: 1 } },
-        { value: "scale", label: "구조를 갖춰 크게 키우는 회사", score: { model: 1, t: 1, j: 1 } },
+        { value: "scale", label: "팀·구조를 갖춰 크게 키우는 사업", score: { model: 1, t: 1, j: 1 } },
         { value: "agile", label: "여러 시도를 빠르게 돌리는 가벼운 사업", score: { action: 1, p: 1, n: 1 } },
       ],
     },
@@ -353,7 +507,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       required: true,
       options: [
         { value: "shock", label: "예상 못 한 장면·반전으로 시선을 낚아챈다", score: { hook: 2, n: 1 } },
-        { value: "problem", label: "‘딱 내 얘기’ 싶은 고민을 정면으로 찌른다", score: { hook: 2, f: 1 } },
+        { value: "problem", label: "딱 내 얘기 싶은 고민을 정면으로 찌른다", score: { hook: 2, f: 1 } },
         { value: "benefit", label: "결과·혜택을 첫 줄에 대놓고 박는다", score: { hook: 1, offer: 1, t: 1 } },
         { value: "asis", label: "솔직히 첫 컷은 별생각 없이 만든다", score: { hook: 0 } },
       ],
@@ -365,7 +519,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       required: true,
       options: [
         { value: "rate", label: "조회·3초 재생률을 소재별로 비교한다", score: { hook: 2, t: 1, j: 1 } },
-        { value: "feel", label: "내가 봐서 ‘멈칫’ 했는지로 판단한다", score: { hook: 1, f: 1 } },
+        { value: "feel", label: "내가 봐서 멈칫 했는지로 판단한다", score: { hook: 1, f: 1 } },
         { value: "ab", label: "여러 첫 컷을 A/B로 돌려본다", score: { hook: 2, s: 1 } },
         { value: "none", label: "딱히 확인 안 한다", score: { hook: 0 } },
       ],
@@ -377,7 +531,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       required: true,
       options: [
         { value: "before", label: "비포→애프터 변화 보여주기", score: { hook: 2 } },
-        { value: "question", label: "‘혹시 이러신가요?’ 질문 던지기", score: { hook: 1, targeting: 1 } },
+        { value: "question", label: "혹시 이러신가요? 질문 던지기", score: { hook: 1, targeting: 1 } },
         { value: "number", label: "충격적인 숫자·결과 제시", score: { hook: 1, offer: 1 } },
         { value: "unknown", label: "뭐가 잘 먹히는지 모르겠다", score: { hook: 0 } },
       ],
@@ -390,7 +544,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       options: [
         { value: "sharp", label: "상황·고민까지 한 사람을 그릴 만큼 또렷", score: { targeting: 2, j: 1 } },
         { value: "demo", label: "연령·성별 정도는 잡혀 있다", score: { targeting: 1, s: 1 } },
-        { value: "broad", label: "‘관심 있을 만한 사람’ 정도로 넓다", score: { targeting: 1 } },
+        { value: "broad", label: "관심 있을 만한 사람 정도로 넓다", score: { targeting: 1 } },
         { value: "all", label: "최대한 많은 사람에게 뿌린다", score: { targeting: 0 } },
       ],
     },
@@ -413,7 +567,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       options: [
         { value: "ctr", label: "클릭은 되는데 전환이 안 붙을 때", score: { targeting: 2, landing: 1 } },
         { value: "cheap", label: "노출은 싼데 엉뚱한 문의만 올 때", score: { targeting: 2 } },
-        { value: "gut", label: "감으로 ‘좀 이상한데’ 느낄 때", score: { targeting: 1, n: 1 } },
+        { value: "gut", label: "감으로 좀 이상한데 느낄 때", score: { targeting: 1, n: 1 } },
         { value: "none", label: "그런 신호를 잘 못 본다", score: { targeting: 0 } },
       ],
     },
@@ -457,7 +611,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       q: "지금 내미는 제안(가격·혜택)은 얼마나 거절하기 힘든가요?",
       required: true,
       options: [
-        { value: "irresistible", label: "‘이 값에 이걸?’ 싶은 압도적 제안", score: { offer: 2, t: 1 } },
+        { value: "irresistible", label: "이 값에 이걸? 싶은 압도적 제안", score: { offer: 2, t: 1 } },
         { value: "decent", label: "경쟁사와 비슷한 수준은 된다", score: { offer: 1 } },
         { value: "weak", label: "가격 말곤 내세울 게 없다", score: { offer: 0 } },
       ],
@@ -607,7 +761,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       required: true,
       options: [
         { value: "always", label: "저장·댓글·링크 클릭을 매번 유도한다", score: { funnel: 2, e: 1 } },
-        { value: "sometimes", label: "가끔 ‘문의 주세요’ 정도", score: { funnel: 1 } },
+        { value: "sometimes", label: "가끔 문의 주세요 정도", score: { funnel: 1 } },
         { value: "never", label: "유도하면 부담될까 봐 안 한다", score: { funnel: 0, i: 1 } },
       ],
     },
@@ -632,7 +786,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       q: "낯선 사람이 프로필에 처음 닿았을 때, 무슨 계정인지 바로 알까요?",
       required: true,
       options: [
-        { value: "instant", label: "3초 안에 ‘아, 이런 계정’ 하고 안다", score: { concept: 2, j: 1 } },
+        { value: "instant", label: "3초 안에 아, 이런 계정 하고 안다", score: { concept: 2, j: 1 } },
         { value: "scroll", label: "몇 게시물 봐야 감이 온다", score: { concept: 1 } },
         { value: "mixed", label: "잡화점처럼 정체가 흐릿하다", score: { concept: 0, p: 1 } },
       ],
@@ -722,7 +876,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       options: [
         { value: "calendar", label: "콘텐츠 캘린더로 며칠치가 잡혀 있다", score: { consistency: 2, s: 1, j: 1 } },
         { value: "rough", label: "대충 머릿속에 있다", score: { consistency: 1, n: 1 } },
-        { value: "blank", label: "매번 ‘오늘 뭐 올리지’ 한다", score: { consistency: 0 } },
+        { value: "blank", label: "매번 오늘 뭐 올리지 한다", score: { consistency: 0 } },
       ],
     },
     {
@@ -743,7 +897,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       required: true,
       options: [
         { value: "always", label: "저장·DM·링크 클릭을 매번 건다", score: { convert: 2, e: 1 } },
-        { value: "sometimes", label: "가끔 ‘문의 주세요’", score: { convert: 1 } },
+        { value: "sometimes", label: "가끔 문의 주세요", score: { convert: 1 } },
         { value: "never", label: "유도는 거의 안 한다", score: { convert: 0, i: 1 } },
       ],
     },
@@ -812,7 +966,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       q: "제목을 지을 때 가장 신경 쓰는 것은?",
       required: true,
       options: [
-        { value: "gap", label: "‘안 누르면 궁금한’ 호기심 격차를 만든다", score: { thumbnail: 2, n: 1 } },
+        { value: "gap", label: "안 누르면 궁금한 호기심 격차를 만든다", score: { thumbnail: 2, n: 1 } },
         { value: "keyword", label: "검색 키워드를 정확히 넣는다", score: { thumbnail: 1, s: 1 } },
         { value: "plain", label: "내용을 그대로 적는다", score: { thumbnail: 0 } },
       ],
@@ -823,7 +977,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       q: "썸네일 디자인 일관성은?",
       required: true,
       options: [
-        { value: "brand", label: "한눈에 ‘우리 채널’인 톤이 있다", score: { thumbnail: 2, j: 1 } },
+        { value: "brand", label: "한눈에 우리 채널인 톤이 있다", score: { thumbnail: 2, j: 1 } },
         { value: "varies", label: "그때그때 다르다", score: { thumbnail: 1, p: 1 } },
         { value: "none", label: "디자인은 거의 안 한다", score: { thumbnail: 0 } },
       ],
@@ -905,7 +1059,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       required: true,
       options: [
         { value: "punch", label: "한 방 있는 단언·도발로 멈추게 한다", score: { hook: 2, t: 1 } },
-        { value: "question", label: "‘혹시 너도?’ 싶은 질문을 던진다", score: { hook: 1, empathy: 1 } },
+        { value: "question", label: "혹시 너도? 싶은 질문을 던진다", score: { hook: 1, empathy: 1 } },
         { value: "context", label: "상황 설명부터 차분히 깐다", score: { hook: 0, s: 1 } },
       ],
     },
@@ -961,8 +1115,8 @@ export const FREE_TESTS: Record<string, Question[]> = {
       q: "독자가 글을 다 읽고 남는 것은?",
       required: true,
       options: [
-        { value: "aha", label: "‘오 그렇구나’ 하는 한 줄의 깨달음", score: { insight: 2, t: 1 } },
-        { value: "feel", label: "‘맞아, 내 얘기야’ 하는 공감", score: { insight: 1, empathy: 1, f: 1 } },
+        { value: "aha", label: "오 그렇구나 하는 한 줄의 깨달음", score: { insight: 2, t: 1 } },
+        { value: "feel", label: "맞아, 내 얘기야 하는 공감", score: { insight: 1, empathy: 1, f: 1 } },
         { value: "nothing", label: "딱히 남는 게 약하다", score: { insight: 0 } },
       ],
     },
@@ -972,7 +1126,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       q: "글의 말투(보이스)는 어떤가요?",
       required: true,
       options: [
-        { value: "honest", label: "솔직하고 진짜 ‘사람 냄새’가 난다", score: { empathy: 2, f: 1 } },
+        { value: "honest", label: "솔직하고 진짜 사람 냄새가 난다", score: { empathy: 2, f: 1 } },
         { value: "warm", label: "다정하게 독자에게 말 걸듯 쓴다", score: { empathy: 2, e: 1 } },
         { value: "neutral", label: "정보 전달 위주로 담백하다", score: { empathy: 1, t: 1 } },
         { value: "stiff", label: "딱딱하다는 말을 듣는다", score: { empathy: 0 } },
@@ -1176,436 +1330,150 @@ export const FREE_TESTS: Record<string, Question[]> = {
   // ---------------- 자기 발견 진단 (12문항) ----------------
   "self-discovery": [
     {
-      id: "flow",
+      id: "state",
       type: "single",
-      q: "시간 가는 줄 모르고 몰입했던 순간, 당신은 뭘 하고 있었나요?",
+      q: "솔직히 지금 나는?",
       required: true,
       options: [
-        { value: "create", label: "없던 걸 새로 구상하고 만들 때", score: { idea: 2, n: 1 } },
-        { value: "finish", label: "목표를 하나씩 끝내며 진도 뺄 때", score: { drive: 2, j: 1 } },
-        { value: "solve", label: "복잡한 문제를 분석해 답을 찾을 때", score: { logic: 2, t: 1 } },
-        { value: "help", label: "누군가를 돕고 마음이 통했을 때", score: { empathy: 2, f: 1 } },
+        { value: "none", label: "뭘 팔지 아예 모르겠다" },
+        { value: "many", label: "하고 싶은 게 너무 많아 못 고르겠다" },
+        { value: "doubt", label: "팔 건 있는데 이게 될지 모르겠다" },
       ],
     },
     {
-      id: "energy",
+      id: "q1",
       type: "single",
-      q: "지치고 방전됐을 때, 무엇이 당신을 다시 채우나요?",
+      q: "새 아이디어가 떠오르면 나는?",
       required: true,
       options: [
-        { value: "alone", label: "혼자만의 시간·공간", score: { idea: 1, i: 1 } },
-        { value: "people", label: "좋은 사람들과의 대화·만남", score: { empathy: 1, e: 1 } },
-        { value: "win", label: "작은 성취·해낸 기록", score: { drive: 1, j: 1 } },
-        { value: "learn", label: "새로운 걸 배우고 이해하는 것", score: { logic: 1, n: 1 } },
+        { value: "a", label: "신나서 일단 시작해본다", score: { inventor: 1, executor: 1, creator: 1 } },
+        { value: "b", label: "‘이거 될까?’ 먼저 따져본다", score: { strategist: 1, seller: 1, interpreter: 1 } },
       ],
     },
     {
-      id: "praise",
+      id: "q2",
       type: "single",
-      q: "살면서 가장 자주 들어온 칭찬은?",
+      q: "모임·단톡방에 들어가면 나는?",
       required: true,
       options: [
-        { value: "creative", label: "“넌 생각이 진짜 남달라”", score: { idea: 2, n: 1 } },
-        { value: "doer", label: "“넌 말한 건 진짜 해내더라”", score: { drive: 2, j: 1 } },
-        { value: "smart", label: "“넌 설명을 잘하고 똑똑해”", score: { logic: 2, t: 1 } },
-        { value: "warm", label: "“너랑 있으면 편하고 힘이 나”", score: { empathy: 2, f: 1 } },
+        { value: "a", label: "어느새 분위기 띄우고 사람들 이어줌", score: { connector: 1, seller: 1, creator: 1 } },
+        { value: "b", label: "조용히 있다 필요할 때만 말함", score: { craftsman: 1, strategist: 1, interpreter: 1 } },
       ],
     },
     {
-      id: "decide",
+      id: "q3",
       type: "single",
-      q: "중요한 결정을 내릴 때, 최종적으로 따르는 건?",
+      q: "하던 게 익숙해지면 나는?",
       required: true,
       options: [
-        { value: "logic", label: "객관적 사실과 논리", score: { logic: 2, t: 1 } },
-        { value: "value", label: "내 가치관과 사람들에 미칠 영향", score: { empathy: 2, f: 1 } },
-        { value: "result", label: "어느 쪽이 결과를 빨리 내는가", score: { drive: 1, t: 1 } },
-        { value: "gut", label: "직관·가능성에 대한 끌림", score: { idea: 1, n: 1 } },
+        { value: "a", label: "새로운 게 하고 싶어진다", score: { inventor: 1, creator: 1, executor: 1 } },
+        { value: "b", label: "더 깊이 파서 잘하고 싶어진다", score: { craftsman: 1, interpreter: 1, strategist: 1 } },
       ],
     },
     {
-      id: "fear",
+      id: "q4",
       type: "single",
-      q: "당신이 가장 견디기 힘든 상황은?",
+      q: "뭔가 배울 때 나는?",
       required: true,
       options: [
-        { value: "ordinary", label: "특별할 것 없이 남들과 똑같아지는 것", score: { idea: 1, i: 1 } },
-        { value: "stuck", label: "아무것도 진척 없이 멈춰 있는 것", score: { drive: 1, j: 1 } },
-        { value: "wrong", label: "틀리거나 무능해 보이는 것", score: { logic: 1, t: 1 } },
-        { value: "alone", label: "관계가 끊기고 외면받는 것", score: { empathy: 1, f: 1 } },
+        { value: "a", label: "일단 해보면서 익힌다", score: { executor: 1, creator: 1, seller: 1 } },
+        { value: "b", label: "원리부터 이해하고 한다", score: { strategist: 1, interpreter: 1, craftsman: 1 } },
       ],
     },
     {
-      id: "role",
+      id: "q5",
       type: "single",
-      q: "팀 프로젝트에서 자연스럽게 맡게 되는 역할은?",
+      q: "일할 때 더 끌리는 쪽은?",
       required: true,
       options: [
-        { value: "ideator", label: "방향·컨셉을 던지는 아이디어맨", score: { idea: 2, n: 1 } },
-        { value: "driver", label: "일을 굴리고 마감을 책임지는 추진자", score: { drive: 2, j: 1 } },
-        { value: "planner", label: "구조를 짜고 리스크를 챙기는 설계자", score: { logic: 2, j: 1 } },
-        { value: "glue", label: "사람을 챙기고 분위기를 잇는 윤활유", score: { empathy: 2, e: 1, f: 1 } },
+        { value: "a", label: "만들고 다듬기", score: { craftsman: 1, inventor: 1, creator: 1 } },
+        { value: "b", label: "알리고 팔기", score: { seller: 1, connector: 1, strategist: 1 } },
       ],
     },
     {
-      id: "approach",
+      id: "q6",
       type: "single",
-      q: "낯선 과제를 받았을 때 첫 반응은?",
+      q: "친구가 고민을 털어놓으면 나는?",
       required: true,
       options: [
-        { value: "detail", label: "구체적 사실·사례부터 차근차근 파악", score: { logic: 1, s: 1 } },
-        { value: "pattern", label: "전체 맥락·패턴부터 직관적으로 잡음", score: { idea: 1, n: 1 } },
-        { value: "try", label: "일단 손대보며 부딪혀 익힘", score: { drive: 1, s: 1 } },
-        { value: "ask", label: "관련된 사람에게 물어보며 시작", score: { empathy: 1, e: 1 } },
+        { value: "a", label: "같이 해결책을 찾아준다", score: { strategist: 1, interpreter: 1, seller: 1 } },
+        { value: "b", label: "우선 들어주고 공감한다", score: { connector: 1, craftsman: 1 } },
       ],
     },
     {
-      id: "regret",
+      id: "q7",
       type: "single",
-      q: "요즘 가장 자주 드는 생각에 가까운 건?",
+      q: "이런 칭찬이 더 기분 좋다",
       required: true,
       options: [
-        { value: "waste", label: "“내 능력을 제대로 못 쓰고 있는 것 같아”", score: { idea: 1, logic: 1 } },
-        { value: "direction", label: "“열심히는 사는데 방향을 모르겠어”", score: { drive: 1, n: 1 } },
-        { value: "compare", label: "“남들과 비교돼서 자꾸 불안해”", score: { empathy: 1, f: 1 } },
-        { value: "burnout", label: "“다 잘하고 싶은데 지치고 벅차”", score: { logic: 1, j: 1 } },
+        { value: "a", label: "생각이 남다르다는 말", score: { inventor: 1, creator: 1, strategist: 1 } },
+        { value: "b", label: "꾸준하고 믿음직하다는 말", score: { craftsman: 1, interpreter: 1 } },
       ],
     },
     {
-      id: "social",
+      id: "q8",
       type: "single",
-      q: "여러 사람과 있을 때 당신은?",
+      q: "일이 잘 풀릴 때는?",
       required: true,
       options: [
-        { value: "lead", label: "분위기를 띄우고 대화를 주도한다", score: { empathy: 1, e: 1 } },
-        { value: "listen", label: "주로 듣고 필요할 때만 말한다", score: { logic: 1, i: 1 } },
-        { value: "spark", label: "엉뚱한 화제를 던져 판을 흔든다", score: { idea: 1, e: 1, n: 1 } },
-        { value: "organize", label: "흩어진 얘기를 정리하고 결론을 낸다", score: { drive: 1, j: 1 } },
+        { value: "a", label: "혼자 집중할 때", score: { craftsman: 1, inventor: 1, strategist: 1 } },
+        { value: "b", label: "사람들이랑 얘기하다가", score: { connector: 1, seller: 1, creator: 1 } },
       ],
     },
     {
-      id: "plan_life",
+      id: "q9",
       type: "single",
-      q: "여행이나 약속을 잡을 때 당신은?",
+      q: "더 나 같은 쪽은?",
       required: true,
       options: [
-        { value: "plan", label: "동선·예약까지 꼼꼼히 계획한다", score: { logic: 1, j: 1, s: 1 } },
-        { value: "rough", label: "큰 틀만 잡고 나머진 즉흥으로", score: { idea: 1, p: 1, n: 1 } },
-        { value: "go", label: "일단 떠나고 현장에서 정한다", score: { drive: 1, p: 1 } },
-        { value: "follow", label: "같이 가는 사람에 맞춰준다", score: { empathy: 1, f: 1 } },
-      ],
-    },
-    {
-      id: "feedback",
-      type: "single",
-      q: "내 결과물에 대한 피드백을 받을 때, 가장 신경 쓰이는 말은?",
-      required: true,
-      options: [
-        { value: "unoriginal", label: "“좀 뻔하다 / 새롭지 않다”", score: { idea: 1, n: 1 } },
-        { value: "slow", label: "“진행이 느리다 / 결과가 없다”", score: { drive: 1, j: 1 } },
-        { value: "sloppy", label: "“허술하다 / 논리가 약하다”", score: { logic: 1, t: 1 } },
-        { value: "cold", label: "“차갑다 / 공감이 안 된다”", score: { empathy: 1, f: 1 } },
-      ],
-    },
-    {
-      id: "dream_day",
-      type: "single",
-      q: "아무 제약이 없다면, 가장 살고 싶은 하루는?",
-      required: true,
-      options: [
-        { value: "make", label: "내 작업실에서 뭔가를 창작하는 하루", score: { idea: 1, i: 1, n: 1 } },
-        { value: "achieve", label: "큰 목표를 향해 바쁘게 달리는 하루", score: { drive: 1, j: 1 } },
-        { value: "study", label: "관심 분야를 깊이 파고드는 하루", score: { logic: 1, i: 1, t: 1 } },
-        { value: "with", label: "사랑하는 사람들과 함께하는 하루", score: { empathy: 1, e: 1, f: 1 } },
+        { value: "a", label: "넓게 여러 개 벌이기", score: { inventor: 1, creator: 1, seller: 1, executor: 1 } },
+        { value: "b", label: "깊게 하나 파기", score: { craftsman: 1, interpreter: 1, strategist: 1 } },
       ],
     },
   ],
 
-  // ---------------- 목적 발견 진단 (12문항) ----------------
-  purpose: [
+  // ---------------- 무기 유형 테스트 (3종: 온/오프/크리에이터 — Q0 + 공유 9문항) ----------------
+  "weapon-offline": [
     {
-      id: "achieve_thrill",
+      id: "stage",
       type: "single",
-      q: "일하면서 가장 짜릿했던 순간은?",
+      q: "지금 가게(사업)는 어느 단계예요?",
       required: true,
       options: [
-        { value: "win", label: "어려운 목표를 끝내 해냈을 때", score: { achieve: 2, j: 1 } },
-        { value: "free", label: "누구 간섭 없이 내 방식대로 했을 때", score: { freedom: 2, p: 1 } },
-        { value: "help", label: "누군가에게 진짜 도움이 됐을 때", score: { contribute: 2, f: 1 } },
-        { value: "calm", label: "모든 게 안정적으로 굴러갈 때", score: { stability: 2, s: 1 } },
+        { value: "ready", label: "아직 준비 중이에요" },
+        { value: "started", label: "이제 막 시작했어요" },
+        { value: "running", label: "어느 정도 굴리고 있어요" },
       ],
     },
-    {
-      id: "achieve_drive",
-      type: "single",
-      q: "당신을 아침에 일어나게 하는 힘에 가까운 건?",
-      required: true,
-      options: [
-        { value: "grow", label: "어제보다 나아지는 성장감", score: { achieve: 2, n: 1 } },
-        { value: "own", label: "내 삶을 내가 정한다는 감각", score: { freedom: 2 } },
-        { value: "matter", label: "내가 누군가에게 필요하다는 느낌", score: { contribute: 2, f: 1 } },
-        { value: "secure", label: "내일이 불안하지 않다는 안심", score: { stability: 2 } },
-      ],
-    },
-    {
-      id: "achieve_success",
-      type: "single",
-      q: "‘성공’에 가장 가까운 정의는?",
-      required: true,
-      options: [
-        { value: "top", label: "내 분야에서 정상에 오르는 것", score: { achieve: 2, t: 1 } },
-        { value: "master", label: "내 시간의 주인이 되는 것", score: { freedom: 2 } },
-        { value: "legacy", label: "좋은 영향을 남기는 것", score: { contribute: 2, n: 1 } },
-        { value: "base", label: "흔들리지 않는 기반을 갖는 것", score: { stability: 2, s: 1 } },
-      ],
-    },
-    {
-      id: "freedom_money",
-      type: "single",
-      q: "평생 쓸 돈이 생겨도 계속하고 싶은 것은?",
-      required: true,
-      options: [
-        { value: "challenge", label: "더 크고 어려운 도전", score: { achieve: 2 } },
-        { value: "life", label: "원하는 곳에서 원하는 대로 사는 삶", score: { freedom: 2, p: 1 } },
-        { value: "give", label: "세상에 보탬이 되는 일", score: { contribute: 2, f: 1 } },
-        { value: "peace", label: "편안하고 평온한 일상", score: { stability: 2 } },
-      ],
-    },
-    {
-      id: "freedom_choice",
-      type: "single",
-      q: "두 일자리 중 하나만 고른다면?",
-      required: true,
-      options: [
-        { value: "high", label: "빡세지만 크게 성장하는 곳", score: { achieve: 2, j: 1 } },
-        { value: "flex", label: "돈은 덜 줘도 시간이 자유로운 곳", score: { freedom: 2, p: 1 } },
-        { value: "mission", label: "의미 있는 일을 하는 곳", score: { contribute: 2 } },
-        { value: "safe", label: "월급이 안정적인 곳", score: { stability: 2 } },
-      ],
-    },
-    {
-      id: "freedom_constraint",
-      type: "single",
-      q: "당신을 가장 답답하게 만드는 건?",
-      required: true,
-      options: [
-        { value: "stuck", label: "성장 없이 제자리걸음", score: { achieve: 2 } },
-        { value: "control", label: "일일이 통제·간섭받는 것", score: { freedom: 2, p: 1 } },
-        { value: "empty", label: "아무 의미 없는 일", score: { contribute: 2, n: 1 } },
-        { value: "unstable", label: "앞날이 불확실한 것", score: { stability: 2, s: 1 } },
-      ],
-    },
-    {
-      id: "contribute_proud",
-      type: "single",
-      q: "사람들에게 가장 듣고 싶은 말은?",
-      required: true,
-      options: [
-        { value: "best", label: "“넌 정말 대단해, 최고야”", score: { achieve: 2, t: 1 } },
-        { value: "envy", label: "“넌 진짜 자유롭게 산다”", score: { freedom: 2 } },
-        { value: "thanks", label: "“네 덕분에 정말 도움이 됐어”", score: { contribute: 2, f: 1 } },
-        { value: "trust", label: "“넌 항상 든든하고 믿음직해”", score: { stability: 2 } },
-      ],
-    },
-    {
-      id: "contribute_work",
-      type: "single",
-      q: "이상적인 일의 모습에 가까운 건?",
-      required: true,
-      options: [
-        { value: "impactful", label: "성과로 증명되는 일", score: { achieve: 2 } },
-        { value: "autonomous", label: "내가 설계하고 끌어가는 일", score: { freedom: 2 } },
-        { value: "meaningful", label: "누군가의 삶을 바꾸는 일", score: { contribute: 2, n: 1, f: 1 } },
-        { value: "steady", label: "꾸준하고 예측 가능한 일", score: { stability: 2, s: 1 } },
-      ],
-    },
-    {
-      id: "contribute_legacy",
-      type: "single",
-      q: "먼 훗날 어떻게 기억되고 싶나요?",
-      required: true,
-      options: [
-        { value: "achiever", label: "“많은 걸 이뤄낸 사람”", score: { achieve: 2 } },
-        { value: "freeman", label: "“자기답게 산 사람”", score: { freedom: 2 } },
-        { value: "giver", label: "“많은 이를 도운 사람”", score: { contribute: 2, f: 1 } },
-        { value: "rock", label: "“늘 곁에서 든든했던 사람”", score: { stability: 2 } },
-      ],
-    },
-    {
-      id: "stability_risk",
-      type: "single",
-      q: "리스크 앞에서 당신은?",
-      required: true,
-      options: [
-        { value: "bold", label: "크게 먹으려면 크게 걸어야지", score: { achieve: 2, t: 1 } },
-        { value: "free", label: "내가 감당하면 그만, 자유롭게 건다", score: { freedom: 2, p: 1 } },
-        { value: "care", label: "주변에 피해 안 가는지부터 본다", score: { contribute: 1, f: 1 } },
-        { value: "safe", label: "되도록 안전한 길을 택한다", score: { stability: 2, s: 1, j: 1 } },
-      ],
-    },
-    {
-      id: "stability_worry",
-      type: "single",
-      q: "요즘 가장 자주 드는 걱정은?",
-      required: true,
-      options: [
-        { value: "behind", label: "‘이러다 뒤처지는 거 아닌가’", score: { achieve: 2 } },
-        { value: "trapped", label: "‘이 틀에 갇힌 거 아닌가’", score: { freedom: 2 } },
-        { value: "pointless", label: "‘이게 무슨 의미가 있나’", score: { contribute: 2, n: 1 } },
-        { value: "future", label: "‘앞으로 괜찮을까’", score: { stability: 2 } },
-      ],
-    },
-    {
-      id: "lack_now",
-      type: "single",
-      q: "요즘 당신 삶에 가장 부족하다고 느끼는 건?",
-      required: true,
-      options: [
-        { value: "achieve", label: "성장감·성취", score: { achieve: 2 } },
-        { value: "freedom", label: "자유·자율", score: { freedom: 2 } },
-        { value: "contribute", label: "의미·기여", score: { contribute: 2 } },
-        { value: "stability", label: "안정·안심", score: { stability: 2 } },
-      ],
-    },
+    ...WEAPON_Q9,
   ],
-
-  // ---------------- 우선순위 정리 진단 (12문항) ----------------
-  priority: [
+  "weapon-online": [
     {
-      id: "impact_criteria",
+      id: "stage",
       type: "single",
-      q: "할 일을 고를 때 가장 먼저 보는 기준은?",
+      q: "지금 온라인 사업은 어느 단계예요?",
       required: true,
       options: [
-        { value: "impact", label: "결과 임팩트가 큰가", score: { impact: 2, t: 1 } },
-        { value: "urgent", label: "지금 급한가(마감)", score: { urgent: 2 } },
-        { value: "skill", label: "내가 잘하는가", score: { skill: 2 } },
-        { value: "desire", label: "하고 싶은가", score: { desire: 2, f: 1 } },
+        { value: "ready", label: "아직 준비 중이에요" },
+        { value: "started", label: "이제 막 시작했어요" },
+        { value: "running", label: "어느 정도 굴리고 있어요" },
       ],
     },
+    ...WEAPON_Q9,
+  ],
+  "weapon-creator": [
     {
-      id: "impact_bigrock",
+      id: "stage",
       type: "single",
-      q: "‘이것만 되면 나머진 덜 중요해지는’ 큰 일이 있나요?",
+      q: "지금 채널(콘텐츠)은 어느 단계예요?",
       required: true,
       options: [
-        { value: "clear", label: "또렷하게 하나 있다", score: { impact: 2, j: 1 } },
-        { value: "vague", label: "어렴풋이 있다", score: { impact: 1, n: 1 } },
-        { value: "none", label: "다 비슷비슷해 보인다", score: { impact: 0 } },
+        { value: "ready", label: "아직 준비 중이에요" },
+        { value: "started", label: "이제 막 시작했어요" },
+        { value: "running", label: "어느 정도 굴리고 있어요" },
       ],
     },
-    {
-      id: "impact_leverage",
-      type: "single",
-      q: "‘한 번 해두면 두고두고 편해지는’ 일에 시간을 쓰나요?",
-      required: true,
-      options: [
-        { value: "yes", label: "시스템·자산 만드는 일을 챙긴다", score: { impact: 2, n: 1, j: 1 } },
-        { value: "sometimes", label: "급할 때만 잠깐", score: { impact: 1 } },
-        { value: "no", label: "늘 눈앞의 일에 쫓긴다", score: { impact: 0, urgent: 1 } },
-      ],
-    },
-    {
-      id: "urgent_firefight",
-      type: "single",
-      q: "요즘 하루의 대부분은 무엇으로 채워지나요?",
-      required: true,
-      options: [
-        { value: "fire", label: "급한 불 끄기", score: { urgent: 2 } },
-        { value: "plan", label: "계획한 중요한 일", score: { impact: 2, j: 1 } },
-        { value: "habit", label: "익숙해서 그냥 하는 일", score: { skill: 1, s: 1 } },
-        { value: "drift", label: "이것저것 끌려다니다 끝남", score: { urgent: 1, p: 1 } },
-      ],
-    },
-    {
-      id: "urgent_react",
-      type: "single",
-      q: "갑자기 ‘급한 요청’이 들어오면?",
-      required: true,
-      options: [
-        { value: "filter", label: "정말 급한지 따져보고 거른다", score: { impact: 1, t: 1, j: 1 } },
-        { value: "drop", label: "하던 걸 멈추고 바로 처리한다", score: { urgent: 2 } },
-        { value: "guilt", label: "거절을 못 해 다 떠안는다", score: { urgent: 1, f: 1 } },
-      ],
-    },
-    {
-      id: "urgent_waste",
-      type: "single",
-      q: "돌아보면 ‘안 해도 됐는데’ 싶은 일이 많나요?",
-      required: true,
-      options: [
-        { value: "few", label: "거의 없다, 잘 거른다", score: { impact: 2, j: 1 } },
-        { value: "some", label: "꽤 많다", score: { urgent: 1 } },
-        { value: "lots", label: "절반은 그런 일 같다", score: { urgent: 2 } },
-      ],
-    },
-    {
-      id: "skill_strength",
-      type: "single",
-      q: "지금 하는 일이 당신의 강점과 얼마나 맞나요?",
-      required: true,
-      options: [
-        { value: "fit", label: "잘하는 걸로 승부하고 있다", score: { skill: 2, t: 1 } },
-        { value: "half", label: "절반쯤만 맞는다", score: { skill: 1 } },
-        { value: "off", label: "약점을 메우느라 바쁘다", score: { skill: 0 } },
-      ],
-    },
-    {
-      id: "skill_delegate",
-      type: "single",
-      q: "내가 못하거나 약한 일을 어떻게 하나요?",
-      required: true,
-      options: [
-        { value: "delegate", label: "맡기거나 도구로 넘긴다", score: { skill: 2, t: 1, j: 1 } },
-        { value: "try", label: "어떻게든 직접 붙든다", score: { skill: 1, s: 1 } },
-        { value: "stuck", label: "거기서 늘 시간을 잡아먹힌다", score: { skill: 0 } },
-      ],
-    },
-    {
-      id: "skill_value",
-      type: "single",
-      q: "당신이 ‘대체 불가’한 일은 무엇인지 아나요?",
-      required: true,
-      options: [
-        { value: "clear", label: "또렷이 알고 거기에 시간을 쏟는다", score: { skill: 2, j: 1 } },
-        { value: "rough", label: "대략은 안다", score: { skill: 1, n: 1 } },
-        { value: "no", label: "잘 모르겠다", score: { skill: 0 } },
-      ],
-    },
-    {
-      id: "desire_energy",
-      type: "single",
-      q: "지금 일과에서 ‘하고 싶어서’ 하는 일의 비중은?",
-      required: true,
-      options: [
-        { value: "high", label: "꽤 많다, 즐겁다", score: { desire: 2, f: 1 } },
-        { value: "some", label: "조금 있다", score: { desire: 1 } },
-        { value: "none", label: "거의 의무로만 채워져 있다", score: { desire: 0 } },
-      ],
-    },
-    {
-      id: "desire_drain",
-      type: "single",
-      q: "하고 나면 진을 빼는 ‘에너지 도둑’ 일이 있나요?",
-      required: true,
-      options: [
-        { value: "cut", label: "있고, 줄이려 손쓰고 있다", score: { desire: 2, j: 1 } },
-        { value: "endure", label: "있지만 그냥 참고 한다", score: { desire: 1 } },
-        { value: "many", label: "그런 일투성이라 방전된다", score: { desire: 0 } },
-      ],
-    },
-    {
-      id: "fix_now",
-      type: "single",
-      q: "지금 가장 필요한 정리는?",
-      required: true,
-      options: [
-        { value: "impact", label: "임팩트 큰 일 중심으로 재정렬", score: { impact: 2 } },
-        { value: "urgent", label: "급한 일·잡일 쳐내기", score: { urgent: 2 } },
-        { value: "skill", label: "잘하는 일에 집중·위임", score: { skill: 2 } },
-        { value: "desire", label: "하고 싶은 일 되찾기", score: { desire: 2 } },
-      ],
-    },
+    ...WEAPON_Q9,
   ],
 
   // ---------------- 일하는 방식 진단 (12문항) ----------------
@@ -1629,7 +1497,7 @@ export const FREE_TESTS: Record<string, Question[]> = {
       required: true,
       options: [
         { value: "quiet", label: "혼자 조용한 공간", score: { focus: 2, i: 1 } },
-        { value: "block", label: "일정에 ‘방해 금지’ 시간을 잡았을 때", score: { focus: 2, structure: 1, j: 1 } },
+        { value: "block", label: "일정에 방해 금지 시간을 잡았을 때", score: { focus: 2, structure: 1, j: 1 } },
         { value: "buzz", label: "적당히 사람 소리가 있는 곳", score: { collab: 1, e: 1 } },
         { value: "deadline", label: "마감이 코앞일 때", score: { speed: 2, p: 1 } },
       ],
@@ -1778,7 +1646,7 @@ export const PAID_FORMS: Record<string, Question[]> = {
     { id: "link", type: "text", q: "참고 링크(홈페이지/SNS/스토어)", placeholder: "https://", required: false },
   ],
   "business-item": [
-    { id: "background", type: "long", q: "지금까지의 경력·경험을 간단히.", placeholder: "직무, 잘하는 일, 해본 사업 등", required: true },
+    { id: "background", type: "long", q: "지금까지의 경력·경험을 간단히.", placeholder: "잘하는 일, 해본 사업, 살려온 경험 등", required: true },
     { id: "interest", type: "long", q: "관심 있는 분야/시장이 있다면?", placeholder: "여러 개여도 좋아요.", required: true },
     { id: "budget", type: "single", q: "초기 투자 가능 예산은?", required: true, options: [
       { value: "a", label: "거의 없음(무자본)" }, { value: "b", label: "~500만 원" },

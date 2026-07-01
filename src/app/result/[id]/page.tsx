@@ -4,6 +4,8 @@ import ResultPreviewCard from "@/components/ResultPreviewCard";
 import ReportSectionView from "@/components/ReportSectionView";
 import ResultJourney from "@/components/ResultJourney";
 import TypeReport from "@/components/TypeReport";
+import WeaponAxes from "@/components/WeaponAxes";
+import WeaponShare from "@/components/WeaponShare";
 import { getProduct } from "@/lib/products";
 import { buildUnifiedProfile } from "@/lib/profile";
 import { getServiceSupabase, hasSupabase } from "@/lib/supabase/server";
@@ -93,6 +95,13 @@ export default async function ResultPage({ params }: { params: { id: string } })
                 <p className="text-[14px] font-semibold leading-relaxed text-ink">{free.summary}</p>
               </div>
 
+              {/* A. 무기 유형 테스트 — 3축 점수 그래프 (근거를 앞에) */}
+              {result.slug === "weapon" && (
+                <div className="mb-3">
+                  <WeaponAxes scores={free.scores ?? {}} />
+                </div>
+              )}
+
               {/* 전체 무료 공개 */}
               <div className="space-y-3">
                 {free.sections!.map((s, i) => (
@@ -120,13 +129,18 @@ export default async function ResultPage({ params }: { params: { id: string } })
           </>
         )}
 
-        {/* 유형 심화 리포트 — 전체 무료로 길게 */}
-        {miniProfile && (
-          <TypeReport type={miniProfile.type} successPattern={miniProfile.successPattern} />
-        )}
+        {/* 유형 심화 리포트 — 구 진단 전용. 새 시스템 진단(#1,#2,무기유형)은 자체 섹션으로 완결되어 생략. */}
+        {miniProfile &&
+          !["self-discovery", "differentiation", "weapon"].includes(result.slug) &&
+          !result.slug.startsWith("weapon-") && (
+            <TypeReport type={miniProfile.type} successPattern={miniProfile.successPattern} />
+          )}
 
         {/* 결과 저장 + 위키 칸에 본문 입력 + 다음 추천 */}
         <ResultJourney slug={result.slug} free={free} />
+
+        {/* C. 무기 유형 테스트 — 결과 공유 */}
+        {result.slug === "weapon" && <WeaponShare />}
       </main>
     </>
   );

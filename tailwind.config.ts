@@ -1,7 +1,12 @@
 import type { Config } from "tailwindcss";
+import path from "path";
 
+// content 글롭은 Tailwind가 process.cwd() 기준으로 해석한다.
+// 이 앱은 런처(프리뷰/launch.json)에서 CWD가 다른 폴더(무기지도)로 실행될 수 있어
+// 상대경로를 쓰면 엉뚱한 앱의 src를 스캔한다 → 반드시 이 파일 위치 기준 절대경로로 고정.
 const config: Config = {
-  content: ["./src/**/*.{ts,tsx}"],
+  // glob은 forward slash 필요 → path.join의 Windows 백슬래시를 정규화
+  content: [path.join(__dirname, "src/**/*.{ts,tsx}").replace(/\\/g, "/")],
   theme: {
     extend: {
       colors: {

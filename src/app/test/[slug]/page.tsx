@@ -5,9 +5,9 @@ import AppHeader from "@/components/AppHeader";
 import ProgressBar from "@/components/ProgressBar";
 import QuestionCard from "@/components/QuestionCard";
 import LoadingAnalysis from "@/components/LoadingAnalysis";
-import SmartImage from "@/components/SmartImage";
+import WeaponScrollTest from "@/components/WeaponScrollTest";
 import { getFreeTest } from "@/lib/questions";
-import { getProduct, CATEGORY_GRADIENT } from "@/lib/products";
+import { getProduct } from "@/lib/products";
 
 type Answers = Record<string, string | string[] | undefined>;
 
@@ -29,6 +29,11 @@ export default function TestPage({ params }: { params: { slug: string } }) {
         </div>
       </>
     );
+  }
+
+  // 무기 유형 테스트(MBTI식)는 한 스크롤·점 스케일 전용 UI
+  if (params.slug === "weapon") {
+    return <WeaponScrollTest product={product} />;
   }
 
   const q = questions[index];
@@ -82,23 +87,6 @@ export default function TestPage({ params }: { params: { slug: string } }) {
       <ProgressBar current={index + 1} total={questions.length} />
 
       <main className="flex-1">
-        {/* 가이드 캐릭터 */}
-        <div className="px-5 pt-4">
-          <div className="relative h-28 w-full overflow-hidden rounded-2xl">
-            <SmartImage
-              src={`/images/guide/${product.slug}.jpg`}
-              alt="진단 가이드"
-              gradient={CATEGORY_GRADIENT[product.category]}
-              emoji={product.emoji}
-              className="h-full w-full"
-              emojiClassName="text-5xl"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/55 to-transparent" />
-            <p className="absolute bottom-3 left-4 right-4 text-[13px] font-bold text-white drop-shadow">
-              편하게 골라주세요. 정답은 없어요 :)
-            </p>
-          </div>
-        </div>
         <QuestionCard question={q} value={value} onChange={setValue} />
       </main>
 

@@ -21,15 +21,15 @@ export const STAGES: Stage[] = [
     step: 1,
     title: "무기 발견",
     emoji: "🔎",
-    tagline: "나는 어떤 사람이고 무엇을 잘하는가",
-    slugs: ["self-discovery", "purpose", "priority"],
+    tagline: "나는 무엇을 잘하고, 무엇을 원하는가",
+    slugs: ["self-discovery", "purpose"],
   },
   {
     id: "select",
     step: 2,
     title: "무기 선택",
     emoji: "🗡️",
-    tagline: "그 무기로 무엇을 할 것인가",
+    tagline: "무엇을 팔고, 어떻게 팔 것인가",
     slugs: ["business-item", "business-marketing"],
   },
   {
@@ -37,16 +37,16 @@ export const STAGES: Stage[] = [
     step: 3,
     title: "무기 연마",
     emoji: "⚒️",
-    tagline: "고른 무기를 어떻게 날카롭게 할 것인가",
-    slugs: ["content-strategy", "differentiation"],
+    tagline: "어떻게 더 날카롭게 다듬을 것인가",
+    slugs: ["differentiation", "content-strategy"],
   },
   {
     id: "expand",
     step: 4,
     title: "무기 확장",
     emoji: "🚀",
-    tagline: "검증된 무기를 어떻게 키울 것인가",
-    slugs: ["ad-conversion"],
+    tagline: "앞으로 어디로 키워갈 것인가",
+    slugs: ["priority", "ad-conversion"],
   },
 ];
 
@@ -62,13 +62,13 @@ export const JOURNEY_ORDER: string[] = STAGES.flatMap((s) => s.slugs);
 // 명시적 추천 맵(운영자가 자유롭게 수정). 없으면 JOURNEY_ORDER 순서로 폴백.
 export const NEXT_RECOMMEND: Record<string, string> = {
   "self-discovery": "purpose",
-  purpose: "priority",
-  priority: "business-item",
+  purpose: "business-item",
   "business-item": "business-marketing",
   "business-marketing": "differentiation",
   differentiation: "content-strategy",
-  "content-strategy": "ad-conversion",
-  "ad-conversion": "",
+  "content-strategy": "priority",
+  priority: "", // 브랜드 방향성 = 마지막 정리
+  "ad-conversion": "", // 선택 도구 — 다음 추천 흐름엔 안 넣음
 };
 
 export function getNextSlug(slug: string): string | undefined {

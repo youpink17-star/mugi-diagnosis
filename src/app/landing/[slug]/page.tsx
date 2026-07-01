@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import AppHeader from "@/components/AppHeader";
 import SmartImage from "@/components/SmartImage";
 import { getProduct, CATEGORY_GRADIENT } from "@/lib/products";
+import { getStageOf } from "@/lib/journey";
 
 export default function LandingPage({ params }: { params: { slug: string } }) {
   const product = getProduct(params.slug);
@@ -42,21 +43,24 @@ export default function LandingPage({ params }: { params: { slug: string } }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/40" />
           <div className="relative z-10 flex min-h-[420px] flex-col justify-end p-6">
             <span className="inline-flex w-fit rounded-full bg-white/15 px-3 py-1 text-[11px] font-bold text-white backdrop-blur">
-              {product.categoryLabel}
+              {(() => {
+                const st = getStageOf(product.slug);
+                return st ? `${st.step}단계 · ${st.title}` : "1인 사업가 진단";
+              })()}
             </span>
             <h1 className="mt-4 text-[28px] font-extrabold leading-[1.3] drop-shadow-lg">{product.hook}</h1>
             <p className="mt-3 text-[15px] leading-relaxed text-white/85 drop-shadow">{product.hookSub}</p>
             <div className="mt-5 flex items-center gap-2 text-[13px] text-white/75">
               <span className="rounded-md bg-white/15 px-2 py-1 backdrop-blur">약 2분 진단</span>
-              <span className="rounded-md bg-white/15 px-2 py-1 backdrop-blur">무료 결과 제공</span>
+              <span className="rounded-md bg-white/15 px-2 py-1 backdrop-blur">내 유형·강점 분석</span>
             </div>
           </div>
         </section>
 
-        {/* 무료로 받는 것 */}
+        {/* 진단하면 바로 알게 되는 것 */}
         <section className="px-5 py-8">
-          <h2 className="text-[16px] font-extrabold text-ink">무료로 먼저 확인하세요</h2>
-          <p className="mt-1 text-[13px] text-muted">진단만 해도 아래 항목이 바로 공개됩니다.</p>
+          <h2 className="text-[16px] font-extrabold text-ink">진단하면 바로 알게 되는 것</h2>
+          <p className="mt-1 text-[13px] text-muted">몇 가지 질문이면 아래를 바로 짚어드립니다.</p>
           <ul className="mt-4 space-y-2">
             {product.freeReveal.map((it) => (
               <li key={it} className="flex items-start gap-2 rounded-xl bg-soft-pink px-4 py-3 text-[14px] font-semibold text-ink">
@@ -67,12 +71,11 @@ export default function LandingPage({ params }: { params: { slug: string } }) {
           </ul>
         </section>
 
-        {/* 결과에서 알게 되는 것 (전체 무료) */}
+        {/* 결과에서 더 깊이 알게 되는 것 */}
         <section className="px-5 pb-8">
           <div className="rounded-2xl border border-line bg-white p-5">
             <div className="flex items-center justify-between">
-              <h2 className="text-[16px] font-extrabold text-ink">결과에서 알게 되는 것</h2>
-              <span className="rounded-full bg-soft-pink px-2.5 py-1 text-[11px] font-extrabold text-pink">무료</span>
+              <h2 className="text-[16px] font-extrabold text-ink">결과에서 더 깊이 알게 되는 것</h2>
             </div>
             <ul className="mt-4 space-y-2.5">
               {product.paidUnlocks.map((it) => (
@@ -93,7 +96,7 @@ export default function LandingPage({ params }: { params: { slug: string } }) {
           href={`/test/${product.slug}`}
           className="block w-full rounded-2xl bg-pink-grad py-4 text-center text-[16px] font-extrabold text-white shadow-cta active:scale-[0.99]"
         >
-          내 결과 무료로 확인하기
+          지금 진단 시작하기
         </Link>
       </div>
     </>

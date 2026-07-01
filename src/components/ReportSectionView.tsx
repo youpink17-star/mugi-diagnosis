@@ -8,29 +8,58 @@ export default function ReportSectionView({ section }: { section: ReportSection 
         {section.heading}
       </h3>
 
-      {/* 본문: \n\n 으로 문단 분리 */}
-      <div className="mt-3 space-y-3">
-        {section.body.split("\n\n").map((para, i) => (
-          <p
-            key={i}
-            className="text-[14px] leading-relaxed text-ink/85"
-            // **굵게** 마크업만 가볍게 지원
-            dangerouslySetInnerHTML={{
-              __html: para.replace(
-                /\*\*(.+?)\*\*/g,
-                '<b class="font-bold text-ink">$1</b>'
-              ),
-            }}
-          />
-        ))}
-      </div>
+      {/* 본문: \n\n 으로 문단 분리 (없으면 생략) */}
+      {section.body && (
+        <div className="mt-3 space-y-3">
+          {section.body.split("\n\n").map((para, i) => (
+            <p
+              key={i}
+              className="text-[14px] leading-relaxed text-ink/85"
+              // **굵게** 마크업만 가볍게 지원
+              dangerouslySetInnerHTML={{
+                __html: para.replace(
+                  /\*\*(.+?)\*\*/g,
+                  '<b class="font-bold text-ink">$1</b>'
+                ),
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* 핑크 알약 (핵심 무기 등) */}
+      {section.chips && section.chips.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {section.chips.map((c, i) => (
+            <span
+              key={i}
+              className="rounded-full bg-soft-pink px-3.5 py-1.5 text-[13px] font-bold text-pink"
+            >
+              {c}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* 네이비 강조 박스 (돈 버는 루트 등) */}
+      {section.highlight && (
+        <div className="mt-3 rounded-2xl bg-navy p-4 text-center">
+          <p className="text-[15px] font-extrabold leading-relaxed text-pink">
+            {section.highlight}
+          </p>
+        </div>
+      )}
 
       {/* 불릿 */}
       {section.bullets && section.bullets.length > 0 && (
-        <ul className="mt-4 space-y-2">
+        <ul className="mt-4 space-y-2.5">
           {section.bullets.map((b, i) => (
-            <li key={i} className="flex items-start gap-2 text-[14px] leading-relaxed text-ink/85">
-              <span className="mt-[3px] h-1.5 w-1.5 shrink-0 rounded-full bg-pink" />
+            <li key={i} className="flex items-start gap-2.5 text-[14px] leading-relaxed text-ink/85">
+              <span className="mt-[2px] grid h-[18px] w-[18px] shrink-0 place-items-center rounded-[6px] bg-soft-pink">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 13l4 4L19 7" stroke="#FF2F8F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
               <span>{b}</span>
             </li>
           ))}
@@ -42,8 +71,8 @@ export default function ReportSectionView({ section }: { section: ReportSection 
         <div className="mt-4 space-y-2">
           {section.examples.map((ex, i) => (
             <div key={i} className="rounded-xl bg-soft-pink px-4 py-3">
-              <p className="text-[13.5px] font-extrabold text-ink">{ex.name}</p>
-              <p className="mt-0.5 text-[13px] leading-relaxed text-ink/75">{ex.desc}</p>
+              <p className="text-[14px] font-extrabold text-pink">{ex.name}</p>
+              <p className="mt-1 text-[13px] leading-relaxed text-ink/80">{ex.desc}</p>
             </div>
           ))}
         </div>

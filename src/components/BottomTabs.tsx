@@ -1,14 +1,14 @@
 "use client";
 import Link from "next/link";
-import { MAP_URL } from "@/lib/links";
 
-// 무기진단 하단 탭 — 진단을 받고, 결과(프로필/실행)를 보고, 본체(무기지도)로 넘어간다.
-type TabId = "home" | "profile" | "weapon-os";
+// 무기진단 하단 탭 — 진단을 받고, 결과(프로필)를 보고, 도구실/지도 설명으로 넘어간다.
+type TabId = "home" | "profile" | "tools" | "map";
 
 const TABS: { id: TabId; label: string; emoji: string; href: string }[] = [
   { id: "home", label: "진단", emoji: "🧪", href: "/" },
   { id: "profile", label: "내 프로필", emoji: "🧭", href: "/profile" },
-  { id: "weapon-os", label: "실행", emoji: "⚡", href: "/weapon-os" },
+  { id: "tools", label: "도구실", emoji: "🧰", href: "/tools" },
+  { id: "map", label: "지도", emoji: "🗺️", href: "/map" },
 ];
 
 export default function BottomTabs({
@@ -42,16 +42,6 @@ export default function BottomTabs({
               </Link>
             );
           })}
-          {/* 본체(무기지도)로 — 외부 앱 링크 */}
-          <a
-            href={MAP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center gap-1 py-3.5 text-[10px] font-bold text-muted transition"
-          >
-            <span className="text-[18px] leading-none">🗺️</span>
-            <span className="leading-tight">지도</span>
-          </a>
         </div>
       </nav>
     </>

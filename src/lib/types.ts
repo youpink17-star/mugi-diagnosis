@@ -53,8 +53,10 @@ export interface ReportExample {
 export interface ReportSection {
   icon?: string;
   heading: string;
-  body: string; // 긴 본문 (\n\n 로 문단 구분)
+  body?: string; // 긴 본문 (\n\n 로 문단 구분)
   bullets?: string[];
+  chips?: string[]; // 핑크 알약 묶음 (핵심 무기 등)
+  highlight?: string; // 네이비 강조 박스 (돈 버는 루트 등)
   examples?: ReportExample[];
 }
 
@@ -107,7 +109,7 @@ export type OrderStatus =
   | "report_sent";
 
 export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
-  free_done: "무료진단 완료",
+  free_done: "진단 완료",
   payment_pending: "결제 대기",
   paid: "결제 완료",
   paid_form_done: "유료폼 완료",

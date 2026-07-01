@@ -6,7 +6,6 @@ import { SELF_DISCOVERY_PAID } from "./self-discovery";
 // 4축 공통 엔진(buildRichFromDef)으로 처리되는 진단들의 정의 레지스트리
 import { AD_CONVERSION_DEF } from "./ad-conversion";
 import { CONTENT_STRATEGY_DEF } from "./content-strategy";
-import { DIFFERENTIATION_DEF } from "./differentiation";
 import { INSTAGRAM_DEF } from "./instagram";
 import { YOUTUBE_DEF } from "./youtube";
 import { SHORTFORM_WRITING_DEF } from "./shortform-writing";
@@ -19,7 +18,6 @@ import { WORK_STYLE_DEF } from "./work-style";
 export const RICH_DEFS: Record<string, RichReportDef> = {
   "ad-conversion": AD_CONVERSION_DEF,
   "content-strategy": CONTENT_STRATEGY_DEF,
-  differentiation: DIFFERENTIATION_DEF,
   instagram: INSTAGRAM_DEF,
   youtube: YOUTUBE_DEF,
   "shortform-writing": SHORTFORM_WRITING_DEF,

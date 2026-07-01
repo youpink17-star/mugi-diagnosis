@@ -96,13 +96,13 @@ const TYPE_OFFER: Record<ProfileTypeId, OfferBase> = {
 
 // 상황별 타겟 한 줄 (누구에게 파는지)
 const SITUATION_TARGET: Record<string, string> = {
-  quit: "퇴사를 앞두고 뭘로 먹고살지 막막한 직장인",
-  laidoff: "갑자기 회사 밖으로 나온 30~40대",
-  burnout: "열심히 했지만 방향을 잃은 직장인",
-  retire: "은퇴 후 내 이름으로 시작하려는 분",
+  quit: "회사를 떠나 내 사업을 시작하려는데 뭘로 먹고살지 막막한 분",
+  laidoff: "갑자기 혼자 벌어야 하게 된 30~40대",
+  burnout: "열심히 했지만 방향을 잃은 사장님",
+  retire: "내 이름으로 사업을 시작하려는 분",
   urgent: "당장 이번 달 수익이 급한 분",
-  lost: "뭘 해야 할지 모르겠는 사회 초년·전환기",
-  side: "회사 다니며 부업을 시작하려는 직장인",
+  lost: "뭘 해야 할지 모르겠는 전환기의 사업가",
+  side: "작게 사업을 시작하려는 분",
   startup: "시작은 했지만 안 팔려 답답한 1인 창업자",
 };
 

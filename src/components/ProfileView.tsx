@@ -167,7 +167,7 @@ function UnlockedSections({
   return (
     <>
       {/* 돈 버는 루트 */}
-      <section className="border-t border-line px-5 pt-6">
+      <section className="px-5 pt-9">
         <h2 className="mb-2 text-[16px] font-extrabold text-ink">💰 나의 돈 버는 루트</h2>
         <div className="rounded-2xl bg-navy p-4 text-center text-white">
           <p className="text-[15px] font-extrabold leading-relaxed text-pink">{type.moneyRoute}</p>

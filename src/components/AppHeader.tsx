@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MAP_URL } from "@/lib/links";
 
 export default function AppHeader({
   title,
@@ -53,16 +52,8 @@ export default function AppHeader({
         <div className="absolute right-3 top-16 w-44 overflow-hidden rounded-xl border border-line bg-white py-1 shadow-card">
           <MenuLink href="/" onClick={() => setOpen(false)}>진단 홈</MenuLink>
           <MenuLink href="/profile" onClick={() => setOpen(false)}>내 프로필</MenuLink>
-          <MenuLink href="/weapon-os" onClick={() => setOpen(false)}>오늘의 실행</MenuLink>
-          <a
-            href={MAP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => setOpen(false)}
-            className="block px-4 py-2.5 text-sm font-semibold text-ink hover:bg-app-bg"
-          >
-            내 사업 지도 ↗
-          </a>
+          <MenuLink href="/tools" onClick={() => setOpen(false)}>도구실</MenuLink>
+          <MenuLink href="/map" onClick={() => setOpen(false)}>내 사업 지도</MenuLink>
           <MenuLink href="/admin" onClick={() => setOpen(false)}>관리자</MenuLink>
         </div>
       )}

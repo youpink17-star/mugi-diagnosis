@@ -136,7 +136,7 @@ export const RESULT_SPEC: Record<string, ResultSpec> = {
     dimLabels: { idea: "창의", drive: "실행", logic: "분석", empathy: "관계" },
     typeCardLabel: "나의 강점 유형",
     types: {
-      idea: { name: "아이디어 대장장이", oneLine: "세상에 없던 컨셉을 벼려내는 창작자.", action: "주 1개 아이디어를 끝까지 완성해보세요." },
+      idea: { name: "아이디어 대장장이", oneLine: "세상에 없던 컨셉을 만들어내는 창작자.", action: "주 1개 아이디어를 끝까지 완성해보세요." },
       drive: { name: "돌격형 전사", oneLine: "일단 부딪혀 결과를 만드는 추진가.", action: "주간 회고로 ‘한 일 vs 효과’를 점검하세요." },
       logic: { name: "전략 책사", oneLine: "구조와 데이터로 길을 설계하는 참모.", action: "분석을 1장 요약 + 실행안까지 만들어보세요." },
       empathy: { name: "관계의 연금술사", oneLine: "사람 마음을 읽고 연결하는 조율가.", action: "내가 연결한 사람·성사시킨 일을 기록하세요." },

@@ -33,13 +33,13 @@ export interface GeneratedContent {
 
 // 상황별 핵심 고통 키워드 (콘텐츠 주제의 뼈대)
 const SITUATION_PAIN: Record<string, { who: string; pain: string }> = {
-  quit: { who: "퇴사 앞둔 직장인", pain: "퇴사 후 뭘로 먹고살지 막막함" },
-  laidoff: { who: "갑자기 회사를 나온 사람", pain: "준비 없이 맞은 실직" },
-  burnout: { who: "번아웃 온 직장인", pain: "방향도 의욕도 사라짐" },
-  retire: { who: "은퇴를 앞둔 분", pain: "내 이름으로 뭘 할지 모름" },
+  quit: { who: "회사를 떠나 내 사업을 시작하려는 사람", pain: "뭘로 먹고살지 막막함" },
+  laidoff: { who: "갑자기 혼자 벌어야 하게 된 사람", pain: "준비 없이 맞은 시작" },
+  burnout: { who: "번아웃 온 사장님", pain: "방향도 의욕도 사라짐" },
+  retire: { who: "내 이름으로 사업을 시작하려는 분", pain: "내 이름으로 뭘 할지 모름" },
   urgent: { who: "당장 돈이 급한 사람", pain: "이번 달 수익이 필요함" },
   lost: { who: "방향을 잃은 사람", pain: "뭘 해야 할지 모르겠음" },
-  side: { who: "부업을 시작하려는 직장인", pain: "뭐부터 작게 시작할지 모름" },
+  side: { who: "작게 사업을 시작하려는 사람", pain: "뭐부터 작게 시작할지 모름" },
   startup: { who: "1인 창업 초기", pain: "시작했는데 안 팔림" },
 };
 
@@ -66,7 +66,7 @@ export function generateContent(input: ContentInput): GeneratedContent {
   const titles = [
     `${pain.who}이 가장 먼저 해야 할 단 한 가지`,
     `${pain.pain}, 사실 순서가 틀렸습니다`,
-    `회사 밖에서 팔리는 사람과 안 팔리는 사람의 차이`,
+    `시장에서 팔리는 사람과 안 팔리는 사람의 차이`,
     `직함을 빼면 나는 무엇으로 팔릴까`,
     `${pain.who}이 흔히 하는 3가지 착각`,
     `돈 버는 건 재능이 아니라 순서입니다`,
@@ -78,9 +78,9 @@ export function generateContent(input: ContentInput): GeneratedContent {
 
   const hooks = [
     `${pain.pain}. 그런데 대부분 순서를 거꾸로 합니다.`,
-    `회사에서는 경력이었지만 밖에서는 상품이 되어야 합니다.`,
+    `회사에서는 경력이었지만 이제는 상품이 되어야 합니다.`,
     `${pain.who}에게 필요한 건 정보가 아니라 내 상황에 맞는 선택입니다.`,
-    `이직도 부업도 아닙니다. 가장 먼저 할 건 따로 있습니다.`,
+    `더 많은 정보 수집도 아닙니다. 가장 먼저 할 건 따로 있습니다.`,
     `저도 ${pain.pain} 상태에서 시작했습니다.`,
     `${weapon}이라면 이 방법이 가장 빠릅니다.`,
     `많은 분이 여기서 시간을 버립니다.`,
@@ -110,7 +110,7 @@ export function generateContent(input: ContentInput): GeneratedContent {
 
   const ctas = [
     `${pain.pain}, 30분 안에 같이 정리해드립니다.`,
-    `회사 밖에서 내가 팔릴 수 있는지 먼저 확인하세요.`,
+    `시장에서 내가 팔릴 수 있는지 먼저 확인하세요.`,
     `오늘 뭘 할지 막막하다면 댓글로 상황 한 줄 남겨주세요.`,
     `[${firstProduct}] 신청은 DM으로 받습니다.`,
     `무기부터 점검하고 시작하세요.`,

@@ -2,7 +2,10 @@ import { getFreeTest } from "./questions";
 import { RESULT_SPEC } from "./results";
 import { deriveMBTI, deriveEnneagram, mbtiLabel } from "./mbti";
 import { buildBusinessItemReport } from "./reports/business-item";
-import { buildSelfDiscoveryReport } from "./reports/self-discovery";
+import { buildFindItemResult } from "./reports/find-item";
+import { buildDifferentiationResult } from "./reports/differentiation";
+import { buildWeaponTypeResult, type Segment } from "./reports/weapon-type";
+import { buildWeaponMbtiResult } from "./reports/weapon-mbti";
 import { getRichDef } from "./reports";
 import { buildRichFromDef } from "./reports/kit";
 import type { FreeResult, ResultCard } from "./types";
@@ -173,27 +176,28 @@ export function computeFreeResult(slug: string, answers: Record<string, unknown>
     return buildBusinessItemReport(strongest, scores, mbti, enn, badges);
   }
 
-  // ---------- 자기 발견 (리치 리포트) ----------
+  // ---------- #1 뭘 팔지 못 정하겠어 (8가지 무기 유형) ----------
   if (slug === "self-discovery") {
-    const dims = ["idea", "drive", "logic", "empathy"];
-    const scores = normalize(raw, dims, 9);
-    const strongest = topDim(scores, dims);
-    const mbti = mbtiLabel(deriveMBTI(raw));
-    const enn = deriveEnneagram(strongest, {
-      idea: "4번 개성가 (독창성 추구)",
-      drive: "3번 성취가 (성과 추구)",
-      logic: "5번 탐구가 (유능함 추구)",
-      empathy: "2번 조력가 (관계 추구)",
-    });
-    const strongLabel: Record<string, string> = {
-      idea: "창의·발상", drive: "추진·실행", logic: "분석·전략", empathy: "공감·관계",
-    };
-    const badges = [
-      { label: "추정 MBTI", value: mbti },
-      { label: "에니어그램", value: enn },
-      { label: "핵심 재능", value: strongLabel[strongest] },
-    ];
-    return buildSelfDiscoveryReport(strongest, scores, mbti, enn, badges);
+    const state = answers["state"] as string | undefined;
+    return buildFindItemResult(raw, state);
+  }
+
+  // ---------- #2 왜 굳이 나야? (차별화 4유형) ----------
+  if (slug === "differentiation") {
+    const state = answers["state"] as string | undefined;
+    return buildDifferentiationResult(raw, state);
+  }
+
+  // ---------- 무기 유형 테스트 (MBTI식 3축 → 8유형) — 입구 1개 ----------
+  if (slug === "weapon") {
+    return buildWeaponMbtiResult(raw);
+  }
+
+  // ---------- (구) 사업자 무기 유형 테스트 (온/오프/크리에이터 — 8유형 공유) ----------
+  if (slug.startsWith("weapon-")) {
+    const segment = slug.replace("weapon-", "") as Segment;
+    const stage = answers["stage"] as string | undefined;
+    return buildWeaponTypeResult(raw, segment, stage);
   }
 
   // ---------- 리치 4축 진단 (공통 엔진) ----------
