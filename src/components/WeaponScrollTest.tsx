@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import AppHeader from "./AppHeader";
 import LoadingAnalysis from "./LoadingAnalysis";
 import CoverImage from "./CoverImage";
-import DiagnosisIllustration from "./DiagnosisIllustration";
+import WeaponTestIllust from "./WeaponTestIllust";
 import { getFreeTest } from "@/lib/questions";
 import type { Product } from "@/lib/types";
 
@@ -74,7 +74,7 @@ export default function WeaponScrollTest({ product }: { product: Product }) {
             src="/images/weapon/test-cover.png"
             alt="무기 유형 테스트"
             className="mx-auto block h-auto w-[76%] max-w-[280px]"
-            fallback={<DiagnosisIllustration className="mx-auto block h-auto w-[76%] max-w-[280px]" />}
+            fallback={<WeaponTestIllust className="mx-auto block h-auto w-[76%] max-w-[280px]" />}
           />
           <p className="mt-2 text-[12.5px] leading-relaxed text-muted">
             평소 나에게 가까운 쪽으로 체크해주세요. 다 답하면 결과가 열려요.
