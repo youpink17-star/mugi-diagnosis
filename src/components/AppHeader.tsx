@@ -55,7 +55,6 @@ export default function AppHeader({
           <MenuLink href="/" onClick={() => setOpen(false)}>진단 홈</MenuLink>
           <MenuLink href="/#tools" onClick={() => setOpen(false)}>도구실</MenuLink>
           <MenuLink href="/#map" onClick={() => setOpen(false)}>내 사업 지도</MenuLink>
-          <MenuLink href="/admin" onClick={() => setOpen(false)}>관리자</MenuLink>
         </div>
       )}
     </header>
