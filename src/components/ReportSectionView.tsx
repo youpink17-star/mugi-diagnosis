@@ -41,14 +41,29 @@ export default function ReportSectionView({ section }: { section: ReportSection 
         </div>
       )}
 
-      {/* 네이비 강조 박스 (돈 버는 루트 등) */}
-      {section.highlight && (
-        <div className="mt-3 rounded-2xl bg-navy p-4 text-center">
-          <p className="text-[15px] font-extrabold leading-relaxed text-pink">
-            {section.highlight}
-          </p>
-        </div>
-      )}
+      {/* 네이비 강조 박스 (돈 버는 루트 · 지금 필요한 무기 등) */}
+      {/* "라벨 — 상세" 형식이면 라벨은 핑크, 상세는 흰색으로 분리. 구분자 없으면(예: 돈 버는 루트) 기존처럼 전체 핑크 */}
+      {section.highlight && (() => {
+        const sep = " — ";
+        const idx = section.highlight.indexOf(sep);
+        if (idx === -1) {
+          return (
+            <div className="mt-3 rounded-2xl bg-navy p-4 text-center">
+              <p className="text-[15px] font-extrabold leading-relaxed text-pink">
+                {section.highlight}
+              </p>
+            </div>
+          );
+        }
+        const label = section.highlight.slice(0, idx);
+        const detail = section.highlight.slice(idx + sep.length);
+        return (
+          <div className="mt-3 rounded-2xl bg-navy p-4 text-center">
+            <p className="text-[15px] font-extrabold leading-relaxed text-pink">{label}</p>
+            <p className="mt-1 text-[13.5px] leading-relaxed text-white">{detail}</p>
+          </div>
+        );
+      })()}
 
       {/* 불릿 */}
       {section.bullets && section.bullets.length > 0 && (

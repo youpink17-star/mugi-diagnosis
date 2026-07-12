@@ -1,5 +1,4 @@
 import AppHeader from "@/components/AppHeader";
-import BottomTabs from "@/components/BottomTabs";
 import MapRoadmap from "@/components/MapRoadmap";
 import { MAP_URL } from "@/lib/links";
 
@@ -33,7 +32,6 @@ export default function MapPage() {
           내 사업 지도 열기 →
         </a>
       </main>
-      <BottomTabs active="map" />
     </>
   );
 }

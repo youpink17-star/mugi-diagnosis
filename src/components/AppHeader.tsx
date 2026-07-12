@@ -15,7 +15,7 @@ export default function AppHeader({
 
   return (
     <header className="sticky top-0 z-30 h-16 border-b border-line bg-white/90 backdrop-blur">
-      <div className="flex h-16 items-center px-5">
+      <div className="relative mx-auto flex h-16 max-w-5xl items-center px-5">
         {showBack ? (
           <button
             aria-label="뒤로"
@@ -34,7 +34,9 @@ export default function AppHeader({
         )}
 
         {title && (
-          <span className="mx-auto truncate px-2 text-[15px] font-bold text-ink">{title}</span>
+          <span className="pointer-events-none absolute left-1/2 top-1/2 max-w-[60%] -translate-x-1/2 -translate-y-1/2 truncate text-center text-[15px] font-bold text-ink">
+            {title}
+          </span>
         )}
 
         <button
@@ -51,9 +53,8 @@ export default function AppHeader({
       {open && (
         <div className="absolute right-3 top-16 w-44 overflow-hidden rounded-xl border border-line bg-white py-1 shadow-card">
           <MenuLink href="/" onClick={() => setOpen(false)}>진단 홈</MenuLink>
-          <MenuLink href="/profile" onClick={() => setOpen(false)}>내 프로필</MenuLink>
-          <MenuLink href="/tools" onClick={() => setOpen(false)}>도구실</MenuLink>
-          <MenuLink href="/map" onClick={() => setOpen(false)}>내 사업 지도</MenuLink>
+          <MenuLink href="/#tools" onClick={() => setOpen(false)}>도구실</MenuLink>
+          <MenuLink href="/#map" onClick={() => setOpen(false)}>내 사업 지도</MenuLink>
           <MenuLink href="/admin" onClick={() => setOpen(false)}>관리자</MenuLink>
         </div>
       )}
