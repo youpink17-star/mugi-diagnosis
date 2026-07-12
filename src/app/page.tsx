@@ -1,6 +1,8 @@
 import AppHeader from "@/components/AppHeader";
 import DiagnosisIllustration from "@/components/DiagnosisIllustration";
 import HeroIllustration from "@/components/HeroIllustration";
+import ToolsIllustration from "@/components/ToolsIllustration";
+import ExperimentIllustration from "@/components/ExperimentIllustration";
 import Link from "next/link";
 import { MAP_URL } from "@/lib/links";
 
@@ -49,19 +51,45 @@ export default function HomePage() {
             </p>
           </div>
 
-          <a
-            href={`${MAP_URL}/tools`}
-            className="flex items-center gap-3 rounded-2xl border border-pink/30 bg-soft-pink p-4 transition active:scale-[0.99]"
-          >
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-[22px]">🛒</span>
-            <div className="min-w-0 flex-1">
-              <p className="text-[14.5px] font-extrabold text-ink">내 무기를 실제 매출로</p>
-              <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted">
-                무료로 내 무기를 찾고, 필요할 때 한 단계씩 올라가세요
+          <div className="space-y-4">
+            {/* 콘텐츠 제조실 */}
+            <div className="rounded-3xl bg-gradient-to-b from-white to-[#F4F0FE] px-5 pb-6 pt-7 ring-1 ring-line">
+              <h3 className="text-center text-[16px] font-extrabold text-ink">
+                콘텐츠가 안 나온다면 <span className="text-pink">콘텐츠 제조실</span>
+              </h3>
+              <p className="mt-1.5 text-center text-[13px] leading-relaxed text-muted">
+                인스타·블로그·유튜브까지, 뭘 사야 할지 고민 없이
+                <br />
+                콘텐츠를 계속 찍어내는 노션 시스템이에요.
               </p>
+              <ToolsIllustration className="mx-auto mt-4 block h-auto w-[86%] max-w-[300px]" />
+              <a
+                href={`${MAP_URL}/tools`}
+                className="mt-5 block rounded-2xl bg-navy py-3.5 text-center text-[15px] font-extrabold text-white"
+              >
+                콘텐츠 제조실 보기 →
+              </a>
             </div>
-            <span className="shrink-0 rounded-full bg-pink px-2.5 py-1 text-[11px] font-bold text-white">바로가기 ↗</span>
-          </a>
+
+            {/* AI 마케팅 실험북 */}
+            <div className="rounded-3xl bg-gradient-to-b from-white to-[#F4F0FE] px-5 pb-6 pt-7 ring-1 ring-line">
+              <h3 className="text-center text-[16px] font-extrabold text-ink">
+                조회수는 있는데 매출이 없다면 <span className="text-pink">AI 마케팅 실험북</span>
+              </h3>
+              <p className="mt-1.5 text-center text-[13px] leading-relaxed text-muted">
+                가진 트래픽을 매출로 바꾸는 실험을
+                <br />
+                48시간 안에 직접 돌려보는 워크북이에요.
+              </p>
+              <ExperimentIllustration className="mx-auto mt-4 block h-auto w-[86%] max-w-[300px]" />
+              <a
+                href={`${MAP_URL}/tools`}
+                className="mt-5 block rounded-2xl bg-navy py-3.5 text-center text-[15px] font-extrabold text-white"
+              >
+                실험북 보기 →
+              </a>
+            </div>
+          </div>
         </section>
 
         {/* 지도 — 내 무기를 사업 지도로 */}
