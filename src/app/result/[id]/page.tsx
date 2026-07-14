@@ -9,7 +9,8 @@ import WeaponShare from "@/components/WeaponShare";
 import { getProduct } from "@/lib/products";
 import { buildUnifiedProfile } from "@/lib/profile";
 import { getServiceSupabase, hasSupabase } from "@/lib/supabase/server";
-import { isDemoId, decodeDemo } from "@/lib/demoid";
+import { isDemoId } from "@/lib/demoid";
+import { readResult, isBlobId } from "@/lib/resultStore";
 import { computeFreeResult } from "@/lib/scoring";
 import type { FreeResult } from "@/lib/types";
 
@@ -19,9 +20,9 @@ interface ResultData {
 }
 
 async function loadResult(id: string): Promise<ResultData | null> {
-  if (isDemoId(id)) {
-    // URL을 짧게 유지하려고 원본 답변만 인코딩해뒀다 — 여기서 다시 계산한다.
-    const d = decodeDemo<{ slug: string; answers: Record<string, unknown> }>(id);
+  if (isBlobId(id) || isDemoId(id)) {
+    // URL을 짧게 유지하려고 원본 답변만 저장해뒀다 — 여기서 다시 계산한다.
+    const d = await readResult<{ slug: string; answers: Record<string, unknown> }>(id);
     if (!d) return null;
     try {
       return { slug: d.slug, free: computeFreeResult(d.slug, d.answers) };

@@ -117,6 +117,25 @@ export default function HomePage() {
 
         <footer className="mt-9 border-t border-line py-6 text-center text-[12px] text-muted">
           <b className="text-ink">무기진단</b> · 내 무기를 찾는 진단
+          <div className="mt-3 flex items-center justify-center gap-3">
+            <a
+              href="https://www.instagram.com/mugi_maker/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[12px] font-semibold text-muted transition hover:text-pink"
+            >
+              인스타그램
+            </a>
+            <span className="text-line">·</span>
+            <a
+              href="https://www.youtube.com/@mugi_maker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[12px] font-semibold text-muted transition hover:text-pink"
+            >
+              유튜브
+            </a>
+          </div>
         </footer>
       </main>
     </>

@@ -2,11 +2,17 @@ import { NextResponse } from "next/server";
 import { getServiceSupabase, hasSupabase } from "@/lib/supabase/server";
 import { getProduct } from "@/lib/products";
 import { getPaymentMode, buildExternalPaymentUrl } from "@/lib/payment";
-import { encodeDemo, isDemoId } from "@/lib/demoid";
+import { isDemoId } from "@/lib/demoid";
+import { storeResult, isBlobId } from "@/lib/resultStore";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(req: Request) {
+  if (!(await checkRateLimit(getClientIp(req), "orders"))) {
+    return NextResponse.json({ error: "요청이 너무 많아요. 잠시 후 다시 시도해주세요." }, { status: 429 });
+  }
+
   const body = await req.json().catch(() => null);
   const slug = body?.product_slug as string | undefined;
   const product = slug ? getProduct(slug) : undefined;
@@ -46,8 +52,9 @@ export async function POST(req: Request) {
     }
     orderId = data.id;
   } else {
-    // 데모 모드
-    orderId = encodeDemo({ slug, name, email, phone, test_response_id: testRespId ?? null });
+    // Supabase 미설정: 이름·이메일·전화번호 같은 개인정보가 URL에 그대로 노출되지 않도록
+    // Netlify Blobs에 저장(불가 시에만 기존 demoid로 폴백)
+    orderId = await storeResult({ slug, name, email, phone, test_response_id: testRespId ?? null });
   }
 
   // 외부 결제 링크 모드면 결제 URL 반환
@@ -57,5 +64,10 @@ export async function POST(req: Request) {
   }
   // portone 모드는 추후 구현(현재는 mock 처럼 통과)
 
-  return NextResponse.json({ orderId, mode, paymentUrl, isDemo: isDemoId(orderId) });
+  return NextResponse.json({
+    orderId,
+    mode,
+    paymentUrl,
+    isDemo: isDemoId(orderId) || isBlobId(orderId),
+  });
 }

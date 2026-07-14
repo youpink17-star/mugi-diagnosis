@@ -2,9 +2,16 @@ import { NextResponse } from "next/server";
 import { getServiceSupabase, hasSupabase } from "@/lib/supabase/server";
 import { getProduct } from "@/lib/products";
 import { sendReportWebhook, type ReportWebhookPayload } from "@/lib/webhook";
-import { isDemoId, decodeDemo } from "@/lib/demoid";
+import { isDemoId } from "@/lib/demoid";
+import { readResult, isBlobId } from "@/lib/resultStore";
+import { computeFreeResult } from "@/lib/scoring";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 export async function POST(req: Request) {
+  if (!(await checkRateLimit(getClientIp(req), "paid-form-submit"))) {
+    return NextResponse.json({ error: "요청이 너무 많아요. 잠시 후 다시 시도해주세요." }, { status: 429 });
+  }
+
   const body = await req.json().catch(() => null);
   const orderId = body?.order_id as string | undefined;
   const paidAnswers = (body?.answers ?? {}) as Record<string, unknown>;
@@ -18,10 +25,11 @@ export async function POST(req: Request) {
   let freeResult: unknown = null;
 
   const sb = hasSupabase() ? getServiceSupabase() : null;
+  const isOrderDemoLike = isBlobId(orderId) || isDemoId(orderId);
 
   // 1) 주문/응답 데이터 수집
-  if (isDemoId(orderId)) {
-    const d = decodeDemo<{
+  if (isOrderDemoLike) {
+    const d = await readResult<{
       slug: string;
       name: string | null;
       email: string | null;
@@ -31,9 +39,16 @@ export async function POST(req: Request) {
     if (!d) return NextResponse.json({ error: "잘못된 주문" }, { status: 400 });
     productSlug = d.slug;
     customer = { name: d.name, email: d.email, phone: d.phone };
-    if (d.test_response_id && isDemoId(d.test_response_id)) {
-      const t = decodeDemo<{ free_result: unknown }>(d.test_response_id);
-      freeResult = t?.free_result ?? null;
+    if (d.test_response_id && (isBlobId(d.test_response_id) || isDemoId(d.test_response_id))) {
+      const t = await readResult<{ slug: string; answers: Record<string, unknown> }>(d.test_response_id);
+      if (t) {
+        freeTestAnswers = t.answers ?? {};
+        try {
+          freeResult = computeFreeResult(t.slug, t.answers);
+        } catch {
+          freeResult = null;
+        }
+      }
     }
   } else if (sb) {
     const { data: order, error } = await sb.from("orders").select("*").eq("id", orderId).single();
@@ -81,7 +96,7 @@ export async function POST(req: Request) {
   const result = await sendReportWebhook(payload);
 
   // 3) 작업 로그 기록 + 발송 완료 상태
-  if (sb && !isDemoId(orderId)) {
+  if (sb && !isOrderDemoLike) {
     await sb.from("report_jobs").insert({
       order_id: orderId,
       product_slug: productSlug,
