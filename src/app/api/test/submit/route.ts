@@ -28,6 +28,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ id: data.id });
   }
 
-  // 데모 모드: 결과를 id 안에 인코딩
-  return NextResponse.json({ id: encodeDemo({ slug, free_result }) });
+  // 데모 모드: 계산된 free_result 전체가 아니라 원본 답변만 id에 인코딩.
+  // 결과 페이지에서 computeFreeResult로 다시 계산해서 쓴다 — 이래야 URL이
+  // 안 길어져서, 너무 긴 URL을 거부하는 배포 환경(프록시·CDN 등)에서도 안전하다.
+  return NextResponse.json({ id: encodeDemo({ slug, answers }) });
 }

@@ -34,7 +34,9 @@ export default function HomePage() {
           </Link>
 
           <p className="mx-auto mt-4 max-w-[330px] text-[12.5px] leading-relaxed text-muted md:max-w-md md:text-[14px]">
-            무기진단은 사용자의 강점과 약점, 일하는 방식을 분석하여 나만의 무기를 8가지로 분류해드립니다.
+            무기진단은 사용자의 강점과 약점, 일하는 방식을 분석하여
+            <br />
+            나만의 무기를 8가지로 분류해드립니다.
           </p>
         </div>
       </section>
@@ -42,7 +44,7 @@ export default function HomePage() {
       <main className="mx-auto w-full max-w-3xl px-5 pt-3 md:px-6">
         {/* 무기상점 — 진단 다음, 실제로 살펴볼 상품들 (카탈로그는 무기지도 기준) */}
         <section id="tools" className="scroll-mt-20 mt-10">
-          <div className="mb-3 text-center">
+          <div className="mb-6 text-center">
             <h2 className="text-[18px] font-extrabold text-ink">
               진단 다음은 <span className="text-pink">무기상점</span>
             </h2>
@@ -58,9 +60,9 @@ export default function HomePage() {
                 콘텐츠가 안 나온다면 <span className="text-pink">콘텐츠 제조실</span>
               </h3>
               <p className="mt-1.5 text-center text-[13px] leading-relaxed text-muted">
-                인스타·블로그·유튜브까지, 뭘 사야 할지 고민 없이
+                인스타그램부터 블로그, 유튜브까지
                 <br />
-                콘텐츠를 계속 찍어내는 노션 시스템이에요.
+                1인 사업가를 위한 자동화 콘텐츠 제조실
               </p>
               <ToolsIllustration className="mx-auto mt-4 block h-auto w-[86%] max-w-[300px]" />
               <a
@@ -74,12 +76,12 @@ export default function HomePage() {
             {/* AI 마케팅 실험북 */}
             <div className="rounded-3xl bg-gradient-to-b from-white to-[#F4F0FE] px-5 pb-6 pt-7 ring-1 ring-line">
               <h3 className="text-center text-[16px] font-extrabold text-ink">
-                조회수는 있는데 매출이 없다면 <span className="text-pink">AI 마케팅 실험북</span>
+                빠르게 매출을 높이고 싶다면 <span className="text-pink">48시간 AI 마케팅 실험북</span>
               </h3>
               <p className="mt-1.5 text-center text-[13px] leading-relaxed text-muted">
-                가진 트래픽을 매출로 바꾸는 실험을
+                주말 48시간동안 혼자서 빠르게 실험하는
                 <br />
-                48시간 안에 직접 돌려보는 워크북이에요.
+                현업 마케터가 검증한 AI 마케팅 실험 워크북
               </p>
               <ExperimentIllustration className="mx-auto mt-4 block h-auto w-[86%] max-w-[300px]" />
               <a
@@ -98,9 +100,9 @@ export default function HomePage() {
             내 무기는 <span className="text-pink">한 장의 지도</span>로
           </h2>
           <p className="mt-1.5 text-center text-[13px] leading-relaxed text-muted">
-            내 무기 유형을 사업 지도에 담으면
+            흩어진 사업 전략과 아이디어를 한곳에 모으고
             <br />
-            내 사업 전체가 한눈에 이어져요.
+            지금 채워야 할 빈틈과 다음 목적지 찾아주는 네비게이션
           </p>
 
           <HeroIllustration className="mx-auto mt-4 block h-auto w-[86%] max-w-[300px]" />

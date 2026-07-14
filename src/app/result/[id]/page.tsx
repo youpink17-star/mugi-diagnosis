@@ -10,6 +10,7 @@ import { getProduct } from "@/lib/products";
 import { buildUnifiedProfile } from "@/lib/profile";
 import { getServiceSupabase, hasSupabase } from "@/lib/supabase/server";
 import { isDemoId, decodeDemo } from "@/lib/demoid";
+import { computeFreeResult } from "@/lib/scoring";
 import type { FreeResult } from "@/lib/types";
 
 interface ResultData {
@@ -19,19 +20,34 @@ interface ResultData {
 
 async function loadResult(id: string): Promise<ResultData | null> {
   if (isDemoId(id)) {
-    const d = decodeDemo<{ slug: string; free_result: FreeResult }>(id);
+    // URL을 짧게 유지하려고 원본 답변만 인코딩해뒀다 — 여기서 다시 계산한다.
+    const d = decodeDemo<{ slug: string; answers: Record<string, unknown> }>(id);
     if (!d) return null;
-    return { slug: d.slug, free: d.free_result };
+    try {
+      return { slug: d.slug, free: computeFreeResult(d.slug, d.answers) };
+    } catch (err) {
+      console.error("[result] 데모 결과 재계산 실패:", err);
+      return null;
+    }
   }
   if (!hasSupabase()) return null;
-  const sb = getServiceSupabase();
-  const { data } = await sb
-    .from("test_responses")
-    .select("product_slug, free_result")
-    .eq("id", id)
-    .single();
-  if (!data) return null;
-  return { slug: data.product_slug, free: data.free_result as FreeResult };
+  try {
+    const sb = getServiceSupabase();
+    const { data, error } = await sb
+      .from("test_responses")
+      .select("product_slug, free_result")
+      .eq("id", id)
+      .single();
+    if (error || !data) {
+      console.error("[result] Supabase 조회 실패:", error);
+      return null;
+    }
+    return { slug: data.product_slug, free: data.free_result as FreeResult };
+  } catch (err) {
+    // 네트워크·설정 문제로 Supabase 호출 자체가 실패해도 페이지가 죽지 않고 404로 처리되게 한다.
+    console.error("[result] Supabase 클라이언트 오류:", err);
+    return null;
+  }
 }
 
 export default async function ResultPage({ params }: { params: { id: string } }) {
