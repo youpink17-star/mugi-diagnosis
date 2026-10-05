@@ -4,12 +4,12 @@ import AppShell from "@/components/AppShell";
 import CopyGuard from "@/components/CopyGuard";
 
 export const metadata: Metadata = {
-  title: "무기진단 — 1인사업가 무기 진단",
+  title: "무기진단 — 내 무기 유형 테스트",
   description:
-    "몇 가지 질문으로 내 강점·상품·타겟·콘텐츠 방향을 잡아주는 진단. 결과는 무기지도로 옮겨 한 장의 사업 지도로 정리하세요.",
+    "나에게 맞는 일하는 방식을 찾아주는 테스트. 내 특별한 장점을 8가지 무기 유형으로 알려드립니다.",
   openGraph: {
-    title: "무기진단 — 1인사업가 무기 진단",
-    description: "몇 가지 질문이면 내 사업의 방향이 잡힙니다.",
+    title: "내 무기 유형은 뭘까? — 무기진단",
+    description: "나에게 맞는 일하는 방식과 내 특별한 장점을 찾아보세요.",
   },
 };
 

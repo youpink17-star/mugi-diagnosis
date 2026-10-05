@@ -15,8 +15,8 @@ export const CATEGORY_HEADLINE: Record<Category, { emoji: string; title: string;
 
 // 이미지 미존재 시 대체 배경 그라데이션 (CSS)
 export const CATEGORY_GRADIENT: Record<Category, string> = {
-  business: "linear-gradient(135deg,#07071F 0%,#2a1248 55%,#FF2F8F 140%)",
-  creator: "linear-gradient(135deg,#1a0830 0%,#6d28d9 60%,#FF2F8F 130%)",
+  business: "linear-gradient(135deg,#07071F 0%,#2a1248 55%,#E0487C 140%)",
+  creator: "linear-gradient(135deg,#1a0830 0%,#6d28d9 60%,#E0487C 130%)",
   identity: "linear-gradient(135deg,#0b1030 0%,#3b2a7a 55%,#8B5CF6 130%)",
 };
 
@@ -31,9 +31,9 @@ export const PRODUCTS: Product[] = [
     category: "identity",
     categoryLabel: "아이덴티티",
     emoji: "🗡️",
-    short: "24문항으로 찾는 내 사업 무기 유형 (8가지)",
-    hook: "내 사업 유형은 뭘까?",
-    hookSub: "24개 질문에 답하면, 당신이 어떤 무기를 든 사업가인지 알려드려요. AI가 다 해먹는 시대, 남들과 다른 나만의 무기를 확인해보세요.",
+    short: "24문항으로 찾는 내 무기 유형 (8가지)",
+    hook: "내 무기 유형은 뭘까?",
+    hookSub: "24개 질문에 답하면, 당신에게 맞는 일하는 방식과 당신만의 무기를 알려드려요. AI가 다 해먹는 시대, 남들과 다른 내 장점을 확인해보세요.",
     includes: ["내 무기 유형 (8가지 중)", "정체성·일하는 방식", "내가 가진 무기 / 필요한 무기", "같은 결의 브랜드 사례"],
     price: 0,
     active: true,
@@ -245,7 +245,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     cta: "내 무기 찾기",
     href: "#products",
     image: "/images/hero/brand.jpg",
-    gradient: "linear-gradient(135deg,#07071F 0%,#2a1248 60%,#FF2F8F 150%)",
+    gradient: "linear-gradient(135deg,#07071F 0%,#2a1248 60%,#E0487C 150%)",
     emoji: "⚒️",
   },
   {
@@ -257,7 +257,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     cta: "내 약점 확인하기",
     href: "/landing/business-marketing",
     image: "/images/hero/business-marketing.jpg",
-    gradient: "linear-gradient(135deg,#1a0830 0%,#6d28d9 55%,#FF2F8F 140%)",
+    gradient: "linear-gradient(135deg,#1a0830 0%,#6d28d9 55%,#E0487C 140%)",
     emoji: "📊",
   },
   {

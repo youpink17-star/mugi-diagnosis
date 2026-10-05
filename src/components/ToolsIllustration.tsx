@@ -12,7 +12,7 @@ export default function ToolsIllustration({ className = "" }: { className?: stri
       <defs>
         <linearGradient id="toolPink" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#FF6FB0" />
-          <stop offset="1" stopColor="#FF2F8F" />
+          <stop offset="1" stopColor="#E0487C" />
         </linearGradient>
       </defs>
 
@@ -41,7 +41,7 @@ export default function ToolsIllustration({ className = "" }: { className?: stri
         <rect x="206" y="46" width="74" height="50" rx="14" fill="#FFFFFF" stroke="#E8E4F5" />
         <path d="M224 96 l-2 16 17 -14 z" fill="#FFFFFF" stroke="#E8E4F5" />
         <circle cx="228" cy="71" r="4.5" fill="#FF8FBE" />
-        <circle cx="244" cy="71" r="4.5" fill="#FF2F8F" />
+        <circle cx="244" cy="71" r="4.5" fill="#E0487C" />
         <circle cx="260" cy="71" r="4.5" fill="#C7BEEA" />
       </g>
 

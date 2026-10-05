@@ -12,7 +12,7 @@ export default function ExperimentIllustration({ className = "" }: { className?:
       <defs>
         <linearGradient id="expFlask" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#FF6FB0" />
-          <stop offset="1" stopColor="#FF2F8F" />
+          <stop offset="1" stopColor="#E0487C" />
         </linearGradient>
       </defs>
 
@@ -64,7 +64,7 @@ export default function ExperimentIllustration({ className = "" }: { className?:
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <circle cx="266" cy="92" r="6" fill="#FF2F8F" />
+        <circle cx="266" cy="92" r="6" fill="#E0487C" />
       </g>
 
       {/* 반짝임 */}

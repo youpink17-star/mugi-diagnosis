@@ -12,7 +12,7 @@ export default function DiagnosisIllustration({ className = "" }: { className?: 
       <defs>
         <linearGradient id="dgGem" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#FF6FB0" />
-          <stop offset="1" stopColor="#FF2F8F" />
+          <stop offset="1" stopColor="#E0487C" />
         </linearGradient>
         <linearGradient id="dgLens" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#FFFFFF" />
@@ -27,7 +27,7 @@ export default function DiagnosisIllustration({ className = "" }: { className?: 
       {/* 카드 상단 — 진단 헤더 바 (네이비) */}
       <rect x="48" y="36" width="166" height="34" rx="18" fill="#07071F" />
       <rect x="48" y="56" width="166" height="14" fill="#07071F" />
-      <circle cx="68" cy="53" r="6.5" fill="#FF2F8F" />
+      <circle cx="68" cy="53" r="6.5" fill="#E0487C" />
       <rect x="82" y="49" width="70" height="8" rx="4" fill="#FFFFFF" opacity="0.85" />
 
       {/* 질문 줄들 */}
@@ -35,9 +35,9 @@ export default function DiagnosisIllustration({ className = "" }: { className?: 
       <rect x="66" y="98" width="92" height="7" rx="3.5" fill="#EEF0F6" />
 
       {/* 선택지 칩 — 하나는 핑크로 선택됨 */}
-      <rect x="66" y="116" width="60" height="20" rx="10" fill="#FFF1F7" stroke="#FF2F8F" strokeWidth="1.4" />
-      <circle cx="78" cy="126" r="4" fill="#FF2F8F" />
-      <rect x="88" y="122" width="30" height="8" rx="4" fill="#FF2F8F" opacity="0.55" />
+      <rect x="66" y="116" width="60" height="20" rx="10" fill="#FFF0F7" stroke="#E0487C" strokeWidth="1.4" />
+      <circle cx="78" cy="126" r="4" fill="#E0487C" />
+      <rect x="88" y="122" width="30" height="8" rx="4" fill="#E0487C" opacity="0.55" />
 
       <rect x="132" y="116" width="56" height="20" rx="10" fill="#F4F5F9" />
       <circle cx="144" cy="126" r="4" fill="#D6DAE6" />
@@ -47,7 +47,7 @@ export default function DiagnosisIllustration({ className = "" }: { className?: 
 
       {/* 돋보기로 발견한 '내 무기' — 보석(다이아) */}
       {/* 빛나는 후광 */}
-      <circle cx="232" cy="132" r="40" fill="#FF2F8F" opacity="0.08" />
+      <circle cx="232" cy="132" r="40" fill="#E0487C" opacity="0.08" />
       {/* 렌즈 */}
       <circle cx="232" cy="132" r="34" fill="url(#dgLens)" stroke="#07071F" strokeWidth="5" />
       {/* 손잡이 */}

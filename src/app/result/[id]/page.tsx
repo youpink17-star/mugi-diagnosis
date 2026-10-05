@@ -6,6 +6,8 @@ import ResultJourney from "@/components/ResultJourney";
 import TypeReport from "@/components/TypeReport";
 import WeaponAxes from "@/components/WeaponAxes";
 import WeaponShare from "@/components/WeaponShare";
+import TypeCharacter from "@/components/TypeCharacter";
+import { deriveWeaponCode } from "@/lib/reports/weapon-mbti";
 import { getProduct } from "@/lib/products";
 import { buildUnifiedProfile } from "@/lib/profile";
 import { getServiceSupabase, hasSupabase } from "@/lib/supabase/server";
@@ -69,11 +71,17 @@ export default async function ResultPage({ params }: { params: { id: string } })
       <main className="flex-1">
         {/* 헤더 */}
         <section className="bg-navy px-6 py-9 text-center text-white">
-          <p className="text-[13px] font-semibold text-pink">{product.title}</p>
-          {free.typeEmoji && (
-            <div className="mt-3 text-[44px] leading-none">{free.typeEmoji}</div>
+          <p className="text-[13px] font-semibold text-white/60">{product.title}</p>
+          {result.slug === "weapon" ? (
+            <TypeCharacter
+              code={deriveWeaponCode(free.scores ?? {})}
+              name={free.typeName}
+              emoji={free.typeEmoji}
+            />
+          ) : (
+            free.typeEmoji && <div className="mt-3 text-[44px] leading-none">{free.typeEmoji}</div>
           )}
-          <h1 className="mt-3 text-[24px] font-extrabold leading-snug text-white">
+          <h1 className="mt-3 text-[24px] font-extrabold leading-snug">
             <span className="text-pink">{free.typeName}</span>
           </h1>
           {free.tagline && (
@@ -108,7 +116,7 @@ export default async function ResultPage({ params }: { params: { id: string } })
           // ===== 리치 리포트 (사업아이템 / 자기발견) =====
           <>
             <section className="px-5 pt-6">
-              <div className="mb-4 rounded-2xl border-l-4 border-pink bg-soft-pink px-4 py-3">
+              <div className="mb-4 rounded-2xl border border-line bg-white px-4 py-3 text-center">
                 <p className="text-[14px] font-semibold leading-relaxed text-ink">{free.summary}</p>
               </div>
 

@@ -55,7 +55,7 @@ export default function SmartImage({
           />
           <div
             className="absolute -right-10 -top-10 h-44 w-44 rounded-full opacity-40 blur-3xl"
-            style={{ background: "rgba(255,47,143,0.55)" }}
+            style={{ background: "rgba(224,72,124,0.55)" }}
           />
           <div
             className="absolute -bottom-12 -left-8 h-40 w-40 rounded-full opacity-30 blur-3xl"

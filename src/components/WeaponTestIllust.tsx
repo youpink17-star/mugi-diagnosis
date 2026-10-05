@@ -20,7 +20,7 @@ export default function WeaponTestIllust({ className }: { className?: string }) 
       {/* 클립보드 */}
       <rect x="52" y="30" width="136" height="158" rx="18" fill="#ffffff" stroke="#07071F" strokeWidth="3.5" />
       {/* 상단 집게 */}
-      <rect x="98" y="21" width="44" height="18" rx="7" fill="#FF2F8F" />
+      <rect x="98" y="21" width="44" height="18" rx="7" fill="#E0487C" />
       {/* 행들 */}
       {rows.map((r, i) => (
         <g key={i}>
@@ -28,8 +28,8 @@ export default function WeaponTestIllust({ className }: { className?: string }) 
             cx="78"
             cy={r.y}
             r="10"
-            fill={r.checked ? "#FF2F8F" : "#ffffff"}
-            stroke={r.checked ? "#FF2F8F" : "#D8D0E8"}
+            fill={r.checked ? "#E0487C" : "#ffffff"}
+            stroke={r.checked ? "#E0487C" : "#D8D0E8"}
             strokeWidth="2.5"
           />
           {r.checked && (
@@ -48,12 +48,12 @@ export default function WeaponTestIllust({ className }: { className?: string }) 
       <g transform="rotate(38 170 150)">
         <rect x="150" y="120" width="15" height="60" rx="6" fill="#07071F" />
         <rect x="150" y="120" width="15" height="20" rx="6" fill="#8B5CF6" />
-        <path d="M150 180 l7.5 16 l7.5 -16 z" fill="#FF2F8F" />
+        <path d="M150 180 l7.5 16 l7.5 -16 z" fill="#E0487C" />
       </g>
       {/* 반짝임 */}
-      <path d="M182 54 l3 8 l8 3 l-8 3 l-3 8 l-3 -8 l-8 -3 l8 -3 z" fill="#FF2F8F" opacity="0.85" />
+      <path d="M182 54 l3 8 l8 3 l-8 3 l-3 8 l-3 -8 l-8 -3 l8 -3 z" fill="#E0487C" opacity="0.85" />
       <circle cx="44" cy="70" r="4" fill="#8B5CF6" opacity="0.7" />
-      <circle cx="196" cy="120" r="3.5" fill="#FF2F8F" opacity="0.6" />
+      <circle cx="196" cy="120" r="3.5" fill="#E0487C" opacity="0.6" />
     </svg>
   );
 }

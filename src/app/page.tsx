@@ -16,11 +16,11 @@ export default function HomePage() {
       {/* 히어로 = 표지: 타이틀 → 일러스트 → CTA → 한 줄 소개 (데스크톱은 넓게) */}
       <section className="w-full bg-gradient-to-b from-[#ECE6FB] via-[#F4F0FE] to-white text-ink">
         <div className="mx-auto max-w-2xl px-6 pb-10 pt-10 text-center md:max-w-3xl md:pb-16 md:pt-16">
-          <p className="text-[12px] font-extrabold tracking-wide text-pink md:text-[13px]">1인사업가 무기 유형 테스트</p>
+          <p className="text-[12px] font-extrabold tracking-wide text-ink/55 md:text-[13px]">나에게 맞는 일하는 방식 찾기 테스트</p>
           <h1 className="mt-2 text-[26px] font-extrabold leading-[1.35] md:text-[42px]">
-            내 사업 유형은 뭘까?
+            내 무기 유형은 뭘까?
             <br />
-            <span className="text-pink">나만의 무기를 찾아보세요.</span>
+            <span className="text-pink">내 특별한 장점을 찾아보세요.</span>
           </h1>
 
           {/* 표지 일러스트 (SVG 직접 렌더 — 엑박 방지) */}
@@ -34,9 +34,7 @@ export default function HomePage() {
           </Link>
 
           <p className="mx-auto mt-4 max-w-[330px] text-[12.5px] leading-relaxed text-muted md:max-w-md md:text-[14px]">
-            무기진단은 사용자의 강점과 약점, 일하는 방식을 분석하여
-            <br />
-            나만의 무기를 8가지로 분류해드립니다.
+            8가지 유형 중 나는 어디일까요?
           </p>
         </div>
       </section>
@@ -46,7 +44,7 @@ export default function HomePage() {
         <section id="tools" className="scroll-mt-20 mt-10">
           <div className="mb-6 text-center">
             <h2 className="text-[18px] font-extrabold text-ink">
-              진단 다음은 <span className="text-pink">무기상점</span>
+              진단 다음은 무기상점
             </h2>
             <p className="mt-1 text-[13px] leading-relaxed text-muted">
               내 무기 유형에 맞는 다음 단계를 무기상점에서 확인하세요.
@@ -57,26 +55,26 @@ export default function HomePage() {
             {/* 콘텐츠 제조실 */}
             <div className="rounded-3xl bg-gradient-to-b from-white to-[#F4F0FE] px-5 pb-6 pt-7 ring-1 ring-line">
               <h3 className="text-center text-[16px] font-extrabold text-ink">
-                콘텐츠가 안 나온다면 <span className="text-pink">콘텐츠 제조실</span>
+                콘텐츠가 안 나온다면 AI 콘텐츠 제조실
               </h3>
               <p className="mt-1.5 text-center text-[13px] leading-relaxed text-muted">
                 인스타그램부터 블로그, 유튜브까지
                 <br />
-                1인 사업가를 위한 자동화 콘텐츠 제조실
+                1인 사업가를 위한 AI 콘텐츠 제조실
               </p>
               <ToolsIllustration className="mx-auto mt-4 block h-auto w-[86%] max-w-[300px]" />
               <a
                 href={`${MAP_URL}/tools`}
                 className="mt-5 block rounded-2xl bg-navy py-3.5 text-center text-[15px] font-extrabold text-white"
               >
-                콘텐츠 제조실 보기 →
+                AI 콘텐츠 제조실 보기 →
               </a>
             </div>
 
             {/* AI 마케팅 실험북 */}
             <div className="rounded-3xl bg-gradient-to-b from-white to-[#F4F0FE] px-5 pb-6 pt-7 ring-1 ring-line">
               <h3 className="text-center text-[16px] font-extrabold text-ink">
-                빠르게 매출을 높이고 싶다면 <span className="text-pink">48시간 AI 마케팅 실험북</span>
+                혼자 하는 48시간 AI 마케팅 실험
               </h3>
               <p className="mt-1.5 text-center text-[13px] leading-relaxed text-muted">
                 주말 48시간동안 혼자서 빠르게 실험하는
@@ -97,7 +95,7 @@ export default function HomePage() {
         {/* 지도 — 내 무기를 사업 지도로 */}
         <section id="map" className="scroll-mt-20 mt-10 rounded-3xl bg-gradient-to-b from-white to-[#F4F0FE] px-5 pb-6 pt-7 ring-1 ring-line">
           <h2 className="text-center text-[18px] font-extrabold text-ink">
-            내 무기는 <span className="text-pink">한 장의 지도</span>로
+            내 무기는 한 장의 지도로
           </h2>
           <p className="mt-1.5 text-center text-[13px] leading-relaxed text-muted">
             흩어진 사업 전략과 아이디어를 한곳에 모으고

@@ -30,15 +30,15 @@ const NEXT_STEPS: NextStepCard[] = [
     eyebrow: "콘텐츠가 문제라면",
     title: "AI 콘텐츠 제조실",
     desc: "인스타 릴스·카드뉴스부터 블로그·유튜브까지, 손이 안 가던 콘텐츠를 계속 찍어내는 곳",
-    cta: "콘텐츠 제조실 보기 →",
+    cta: "AI 콘텐츠 제조실 보기 →",
     href: `${MAP_URL}/tools`,
     Illustration: ToolsIllustration,
   },
   {
     id: "conversion",
-    eyebrow: "조회수는 있는데 매출이 없다면",
-    title: "48시간 AI 마케팅 실험북",
-    desc: "가진 트래픽을 매출로 바꾸는 실험을 48시간 안에 직접 돌려보는 워크북",
+    eyebrow: "마케팅을 혼자 해야 한다면",
+    title: "혼자 하는 48시간 AI 마케팅 실험",
+    desc: "주말 48시간 동안 시간표대로 따라 하는 마케팅 실험 전자책",
     cta: "실험북 보기 →",
     href: `${MAP_URL}/tools`,
     Illustration: ExperimentIllustration,
@@ -63,7 +63,7 @@ export default function ResultJourney({ slug, free }: { slug: string; free: Free
   return (
     <section className="px-5 pb-7 pt-3">
       {/* ① 다음 단계 2분기 + 지도 — 이 유형에게 가장 필요한 카드가 "추천"으로 강조 */}
-      <p className="text-[12px] font-bold text-pink">다음 단계</p>
+      <p className="text-[12px] font-bold text-muted">다음 단계</p>
       <h3 className="mt-1 text-[16px] font-extrabold leading-snug text-ink">
         지금 가장 막힌 지점은 어디인가요?
       </h3>
@@ -79,12 +79,12 @@ export default function ResultJourney({ slug, free }: { slug: string; free: Free
               className={[
                 "block rounded-2xl border p-5 transition active:scale-[0.99]",
                 on
-                  ? "border-pink/50 bg-soft-pink shadow-[0_12px_28px_-10px_rgba(255,47,143,0.5)]"
+                  ? "border-navy bg-white shadow-[0_12px_28px_-12px_rgba(7,7,31,0.35)]"
                   : "border-line bg-white shadow-[0_10px_22px_-12px_rgba(7,7,31,0.2)]",
               ].join(" ")}
             >
               {on && (
-                <span className="mb-2 inline-block rounded-full bg-pink px-2.5 py-1 text-[11px] font-extrabold text-white">
+                <span className="mb-2 inline-block rounded-full bg-navy px-2.5 py-1 text-[11px] font-extrabold text-white">
                   ⭐ 추천
                 </span>
               )}
@@ -133,14 +133,14 @@ export default function ResultJourney({ slug, free }: { slug: string; free: Free
             href={`/landing/${next.slug}`}
             className="flex items-center gap-3 rounded-2xl border border-line bg-white p-4 transition hover:border-pink"
           >
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-soft-pink text-[22px]">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#F1F0F6] text-[22px]">
               {next.emoji}
             </span>
             <div className="min-w-0 flex-1">
               <p className="truncate text-[14.5px] font-extrabold text-ink">{next.title}</p>
               <p className="mt-0.5 truncate text-[12.5px] text-muted">{next.short}</p>
             </div>
-            <span className="text-[18px] font-extrabold text-pink">→</span>
+            <span className="text-[18px] font-extrabold text-ink">→</span>
           </Link>
         </div>
       )}

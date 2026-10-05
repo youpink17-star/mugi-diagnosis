@@ -67,7 +67,7 @@ export default function MapRoadmap({ className = "" }: { className?: string }) {
 
           {/* 시작 깃발 */}
           <rect x={pts[0].x - 22} y={pts[0].y - 40} width="2.5" height="22" rx="1" fill="#94A1B2" />
-          <path d={`M ${pts[0].x - 20} ${pts[0].y - 40} L ${pts[0].x - 7} ${pts[0].y - 35} L ${pts[0].x - 20} ${pts[0].y - 30} Z`} fill="#FF2F8F" />
+          <path d={`M ${pts[0].x - 20} ${pts[0].y - 40} L ${pts[0].x - 7} ${pts[0].y - 35} L ${pts[0].x - 20} ${pts[0].y - 30} Z`} fill="#E0487C" />
 
           {/* 목표 보물상자 */}
           <ellipse cx={goal.x} cy={goal.y + 18} rx="20" ry="5" fill="#07071F" opacity="0.10" />

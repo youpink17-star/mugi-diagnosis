@@ -50,12 +50,19 @@ export interface ReportExample {
   name: string; // 닮은 사업가 / 브랜드 / 직무
   desc: string; // 왜 닮았는지
 }
+// 스티커 한 장. shape: pill(알약) · box(네모 라벨) · tape(마스킹테이프) · round(동그란 도장) · speech(말풍선)
+export interface ReportSticker {
+  text: string;
+  shape?: "pill" | "box" | "tape" | "round" | "speech";
+}
+
 export interface ReportSection {
   icon?: string;
   heading: string;
   body?: string; // 긴 본문 (\n\n 로 문단 구분)
   bullets?: string[];
   chips?: string[]; // 핑크 알약 묶음 (핵심 무기 등)
+  stickers?: ReportSticker[]; // 스티커 시트 (유형 특징을 말투로 한눈에)
   highlight?: string; // 네이비 강조 박스 (돈 버는 루트 등)
   examples?: ReportExample[];
 }
