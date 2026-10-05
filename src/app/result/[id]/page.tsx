@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import AppHeader from "@/components/AppHeader";
 import ResultPreviewCard from "@/components/ResultPreviewCard";
@@ -53,8 +55,27 @@ async function loadResult(id: string): Promise<ResultData | null> {
   }
 }
 
+// 미리보기(메타)와 본문이 같은 결과를 두 번 불러오지 않게 한 요청 안에서는 한 번만 읽는다
+const getResult = cache(loadResult);
+
+// 카톡·문자에 결과 링크를 보냈을 때 뜨는 미리보기 — 유형 이름과 캐릭터가 보이게 (이미지: public/og/{유형코드}.jpg)
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const result = await getResult(params.id);
+  if (!result || result.slug !== "weapon") return {};
+  const code = deriveWeaponCode(result.free.scores ?? {});
+  const title = `나는 ‘${result.free.typeName}’ — 내 무기 유형 테스트`;
+  const description = `${result.free.tagline ?? ""} · 8가지 유형 중 나는 어디일까?`;
+  const image = { url: `/og/${code}.jpg`, width: 1200, height: 630, alt: `${result.free.typeName} 캐릭터` };
+  return {
+    title,
+    description,
+    openGraph: { title, description, images: [image], type: "website" },
+    twitter: { card: "summary_large_image", title, description, images: [image.url] },
+  };
+}
+
 export default async function ResultPage({ params }: { params: { id: string } }) {
-  const result = await loadResult(params.id);
+  const result = await getResult(params.id);
   if (!result) notFound();
 
   const product = getProduct(result.slug);
