@@ -44,7 +44,7 @@ export default function HomePage() {
         <section id="tools" className="scroll-mt-20 mt-10">
           <div className="mb-6 text-center">
             <h2 className="text-[18px] font-extrabold text-ink">
-              진단 다음은 무기상점
+              테스트 다음은 무기상점
             </h2>
             <p className="mt-1 text-[13px] leading-relaxed text-muted">
               내 무기 유형에 맞는 다음 단계를 무기상점에서 확인하세요.
@@ -114,7 +114,7 @@ export default function HomePage() {
         </section>
 
         <footer className="mt-9 border-t border-line py-6 text-center text-[12px] text-muted">
-          <b className="text-ink">무기진단</b> · 내 무기를 찾는 진단
+          <b className="text-ink">무기 유형 테스트</b> · 나에게 맞는 일하는 방식 찾기
           <div className="mt-3 flex items-center justify-center gap-3">
             <a
               href="https://www.instagram.com/mugi_maker/"

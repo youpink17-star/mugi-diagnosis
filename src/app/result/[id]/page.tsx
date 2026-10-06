@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const result = await getResult(params.id);
   if (!result || result.slug !== "weapon") return {};
   const code = deriveWeaponCode(result.free.scores ?? {});
-  const title = `나는 ‘${result.free.typeName}’ — 내 무기 유형 테스트`;
+  const title = `나는 ‘${result.free.typeName}’ — 무기 유형 테스트`;
   const description = `${result.free.tagline ?? ""} · 8가지 유형 중 나는 어디일까?`;
   const image = { url: `/og/${code}.jpg`, width: 1200, height: 630, alt: `${result.free.typeName} 캐릭터` };
   return {
@@ -87,7 +87,7 @@ export default async function ResultPage({ params }: { params: { id: string } })
 
   return (
     <>
-      <AppHeader title="진단 결과" />
+      <AppHeader title="테스트 결과" />
 
       <main className="flex-1">
         {/* 헤더 */}

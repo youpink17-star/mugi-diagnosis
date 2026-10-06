@@ -29,7 +29,10 @@ export default function AppHeader({
         ) : (
           <Link href="/" className="flex items-center gap-2">
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-navy text-[17px]">🧪</span>
-            <span className="text-[16px] font-extrabold tracking-tight text-navy">무기진단</span>
+            {/* 가운데 제목이 있는 화면(결과 등)에서는 좁은 폰에서 이름이 제목과 겹치지 않게 아이콘만 남긴다 */}
+            <span className={`text-[16px] font-extrabold tracking-tight text-navy ${title ? "hidden sm:inline" : ""}`}>
+              무기 유형 테스트
+            </span>
           </Link>
         )}
 
@@ -52,7 +55,7 @@ export default function AppHeader({
 
       {open && (
         <div className="absolute right-3 top-16 w-44 overflow-hidden rounded-xl border border-line bg-white py-1 shadow-card">
-          <MenuLink href="/" onClick={() => setOpen(false)}>진단 홈</MenuLink>
+          <MenuLink href="/" onClick={() => setOpen(false)}>테스트 홈</MenuLink>
           <MenuLink href="/#tools" onClick={() => setOpen(false)}>도구실</MenuLink>
           <MenuLink href="/#map" onClick={() => setOpen(false)}>내 사업 지도</MenuLink>
         </div>

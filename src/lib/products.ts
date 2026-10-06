@@ -27,7 +27,7 @@ export const PRODUCTS: Product[] = [
   // ================= 무기 유형 테스트 (MBTI식 · 입구 1개) =================
   {
     slug: "weapon",
-    title: "내 무기 유형 테스트",
+    title: "무기 유형 테스트",
     category: "identity",
     categoryLabel: "아이덴티티",
     emoji: "🗡️",
