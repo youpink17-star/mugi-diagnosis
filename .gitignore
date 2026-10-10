@@ -36,3 +36,4 @@ next-env.d.ts
 # 캐릭터 원본(용량 큼) — 웹용은 public/characters/*.webp
 /캐릭터_원본/
 /캐릭터_투명배경/
+/캐릭터_투명배경_3D/
